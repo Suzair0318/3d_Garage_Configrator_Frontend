@@ -93,11 +93,11 @@ export default function LeftMenuPanel({ onMenuItemClick }) {
                   group relative overflow-hidden rounded-xl cursor-pointer 
                   transition-all duration-300 ease-out transform hover:scale-105
                   flex items-center justify-center w-14 h-14
-                  backdrop-blur-sm border
+                  backdrop-blur-sm border 
                   ${
                     isActive
-                      ? 'bg-gradient-to-br from-slate-50 to-white border-l-4 border-l-blue-500 border-t-slate-200 border-r-slate-200 border-b-slate-200 shadow-lg shadow-blue-500/10 scale-105'
-                      : 'bg-white/80 border-gray-200/60 text-gray-600 shadow-sm hover:bg-white hover:shadow-md hover:border-gray-300'
+                      ? 'bg-gradient-to-br from-slate-50 to-white border-l-4 border-l-[#FF1717] border-t-slate-200 border-r-slate-200 border-b-slate-200 shadow-lg shadow-red-500/10 scale-105'
+                      : 'bg-white/80 border-2 border-gray-200/60 text-gray-600 shadow-sm hover:bg-white hover:shadow-md hover:border-[#FF1717] hover:border'
                   }
                 `}
                 onClick={() => handleItemClick(item, index)}
@@ -117,7 +117,7 @@ export default function LeftMenuPanel({ onMenuItemClick }) {
                   transition-all duration-300 transform group-hover:scale-110
                   ${
                     isActive
-                      ? 'text-blue-600 drop-shadow-sm'
+                      ? 'text-[#FF1717] drop-shadow-sm'
                       : 'text-gray-500 group-hover:text-gray-700'
                   }
                 `}>
@@ -139,7 +139,7 @@ export default function LeftMenuPanel({ onMenuItemClick }) {
                     {/* Left border accent */}
                     {/* <div className="absolute -left-0.5 top-1/2 -translate-y-1/2 w-1 h-10 bg-blue-500 rounded-r-full" /> */}
                     {/* Top-right indicator dot */}
-                    <div className="absolute top-1 right-1 w-2 h-2 bg-blue-500 rounded-full shadow-sm animate-pulse" />
+                    <div className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full shadow-sm animate-pulse" />
                   </>
                 )}
                 

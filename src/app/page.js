@@ -19,10 +19,12 @@ export default function Home() {
 
   return (
     <ConfiguratorLayout>
-      <ConfiguratorIframe />
-      <TopInfoPanel />
+      {/* <ConfiguratorIframe /> */}
+  
+      {/* <TopInfoPanel />
       <LeftMenuPanel onMenuItemClick={handleMenuItemClick} />
-      <BottomControlPanel onControlClick={handleControlClick} />
+      <BottomControlPanel onControlClick={handleControlClick} /> */}
+      
       
       {/* Debug info - can be removed in production */}
       {selectedMenuItem && (
@@ -38,7 +40,7 @@ export default function Home() {
         }}>
           Selected: {selectedMenuItem.label}
         </div>
-      )}
+      )} 
     </ConfiguratorLayout>
   );
 }

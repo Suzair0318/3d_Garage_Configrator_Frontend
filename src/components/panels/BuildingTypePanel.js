@@ -165,7 +165,17 @@ const BuildingTypePanel = (
 
   return (
     <div className="h-full overflow-y-auto">
-      <div className="p-3 space-y-4">
+      {/* Header Section */}
+      <div className="p-3 mb-2">
+        <h2 className="text-lg font-semibold text-[#07223D] mb-1">
+          Pre-Designed Buildings
+        </h2>
+        <p className="text-sm text-gray-600">
+          Select a buildings style from pre-designed building sets
+        </p>
+      </div>
+      
+      <div className="p-2 space-y-2">
         {categories.map((category, index) => {
           const isExpanded = expandedCategory === category.id;
           const isSelected = selectedCategory === category.id; // Use dynamic selected state
@@ -174,68 +184,57 @@ const BuildingTypePanel = (
             <div
               key={category.id}
               className={`
-                rounded-xl border transition-all duration-300 overflow-hidden
-                ${isSelected
+                rounded-lg border transition-all duration-200 overflow-hidden bg-transparent
+                ${isExpanded
                   ? 'border-[#FF1717]'
-                  : isExpanded
-                    ? 'border-gray-300 bg-white shadow-lg'
-                    : 'border-gray-200 bg-white hover:border-gray-300'
+                  : 'border-[#07223D]'
                 }
               `}
-              style={{ animationDelay: `${index * 50}ms` }}
+              style={{ animationDelay: `${index * 30}ms` }}
             >
-              {/* Category Header */}
+              {/* Category Header - Compact */}
               <div
-                className={`
-                  flex items-center justify-between p-4 cursor-pointer transition-all duration-200
-                
-                `}
+                className="flex items-center justify-between px-3 py-2 cursor-pointer transition-all duration-150 bg-transparent"
                 onClick={() => toggleCategory(category.id)}
               >
-                <div className="flex items-center space-x-3">
+                <div className="flex items-center space-x-2">
                   <span className={`
-                    font-medium text-base
-                    ${isSelected ? 'text-[#FF1717]' : 'text-gray-800'}
+                    font-semibold text-sm
+                    ${isExpanded ? 'text-[#FF1717]' : 'text-[#07223D]'}
                   `}>
                     {category.name}
                   </span>
-                  {isSelected && (
-                    <span className="bg-[#FF1717] text-white text-xs px-2 py-1 rounded-full font-medium">
+                  {isExpanded && (
+                    <span className="border border-[#FF1717] text-[#FF1717] text-xs px-1.5 py-0.5 rounded-[4px] font-medium">
                       selected
                     </span>
                   )}
                 </div>
 
-                {isSelected ? (
-                  <button
-                    className="text-[#FF1717] hover:bg-red-100 p-1 rounded transition-colors"
-                    onClick={e => {
-                      e.stopPropagation();
-                      setExpandedCategory(null);
-                      setSelectedCategory(null);
-                    }}
-                    aria-label="Close category accordion"
-                  >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                  </button>
-                ) : (
+                {isExpanded ? (
                   <svg
-                    className={`w-5 h-5 text-gray-400 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''
-                      }`}
+                    className="w-4 h-4 text-[#FF1717] transition-all duration-150"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
                   >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                ) : (
+                  <svg
+                    className="w-4 h-4 text-[#07223D] transition-all duration-150"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                   </svg>
                 )}
               </div>
 
               {/* Category Content - Card Layout */}
-              {(isExpanded || isSelected) && (
-                <div className="border-t border-gray-200 p-4">
+              {isExpanded && (
+                <div className="p-3 bg-transparent">
                   <div className="flex flex-col gap-4">
                     {category.items.map((item, itemIndex) => (
                       <div
@@ -243,7 +242,7 @@ const BuildingTypePanel = (
                         className={`
                           relative bg-white rounded-xl border-2 cursor-pointer transition-all duration-300 hover:shadow-lg hover:-translate-y-1
                           ${selectedItem?.id === item.id
-                            ? 'border-blue-500 bg-blue-50 shadow-lg transform -translate-y-1'
+                            ? 'border-[#FF1717] bg-[#FF1717] shadow-lg transform -translate-y-1'
                             : 'border-gray-200 hover:border-gray-300'
                           }
                           ${item.featured ? 'ring-2 ring-red-200 bg-gradient-to-br from-red-50 to-orange-50' : ''}
@@ -254,7 +253,7 @@ const BuildingTypePanel = (
                         {/* Selection Indicator */}
                         {selectedItem?.id === item.id && (
                           <div className="absolute top-3 right-3 z-10">
-                            <div className="bg-blue-500 text-white rounded-full p-1">
+                            <div className="bg-[#FF1717] text-white rounded-full p-1">
                               <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                 <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                               </svg>
@@ -274,7 +273,7 @@ const BuildingTypePanel = (
                         {/* Card Content */}
                         <div className="p-4">
                           {/* Large Image/Icon */}
-                          <div className="w-full h-32 bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg flex items-center justify-center text-5xl shadow-inner mb-4">
+                          <div className="w-full h-32 rounded-lg flex items-center justify-center text-5xl mb-4">
                             {item.image}
                           </div>
 
@@ -302,10 +301,10 @@ const BuildingTypePanel = (
 
                             {selectedItem?.id === item.id && (
                               <button
-                                className="w-full py-2 px-4 rounded-lg font-medium transition-all duration-200 bg-blue-500 text-white shadow-md cursor-pointer"
+                                className="w-full py-1  rounded-lg font-medium transition-all duration-200 bg-[#07223D] text-white shadow-md cursor-pointer"
                                 onClick={() => handle_open_size_panel()}
                               >
-                                Next (Size)
+                                Next ( Build & Size)
                               </button>
                             )}
                           </div>

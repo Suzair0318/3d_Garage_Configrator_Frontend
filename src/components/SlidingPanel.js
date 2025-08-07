@@ -69,8 +69,8 @@ const SlidingPanel = ({ activeMenuItem, isVisible, onClose , setActiveIndex , se
       {/* Sliding Panel */}
       <div
         className={`
-          fixed left-24 top-6 bottom-6 z-40 w-80 flex flex-col
-          bg-white rounded-2xl shadow-2xl border border-gray-200/50
+          fixed left-[100px] top-6 bottom-6 z-40 w-80 flex flex-col
+          bg-white rounded-2xl border border-gray-200/50
           transform transition-all duration-300 ease-out backdrop-blur-sm 
           ${isVisible && !isAnimating 
             ? 'translate-x-0 opacity-100 scale-100' 
@@ -79,14 +79,14 @@ const SlidingPanel = ({ activeMenuItem, isVisible, onClose , setActiveIndex , se
         `}
       >
         {/* Panel Header */}
-        <div className="flex items-center justify-between p-4 border-b border-gray-200">
-          <div className="flex items-center space-x-0.5">
-            {activeMenuItem?.icon && (
+        <div className="flex items-center justify-between p-4">
+          <div className="flex items-center justify-center w-full">
+            {/* {activeMenuItem?.icon && (
               <div className="w-8 h-8 text-[#FF1717] mt-2">
                 <activeMenuItem.icon />
               </div>
-            )}
-            <h2 className="text-lg font-semibold text-[#FF1717]">
+            )} */}
+            <h2 className="text-lg text-center font-semibold text-[#FF1717]">
               {activeMenuItem?.label}
             </h2>
           </div>
@@ -109,18 +109,6 @@ const SlidingPanel = ({ activeMenuItem, isVisible, onClose , setActiveIndex , se
         <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 hover:scrollbar-thumb-gray-400">
           <div className={`transition-all duration-300 transform ${isAnimating ? 'opacity-0 translate-y-2' : 'opacity-100 translate-y-0'}`}>
             {renderPanelContent()}
-          </div>
-        </div>
-
-        {/* Panel Footer */}
-        <div className="flex-shrink-0 p-4 border-t border-gray-200 bg-gray-50 rounded-b-2xl">
-          <div className="flex space-x-3">
-            <button className="flex-1 px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 hover:scale-105 active:scale-95 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#FF1717] focus:ring-offset-2">
-              Reset
-            </button>
-            <button className="flex-1 px-4 py-2 bg-[#FF1717] text-white rounded-lg hover:bg-red-600 hover:scale-105 active:scale-95 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 shadow-lg hover:shadow-xl">
-              Apply
-            </button>
           </div>
         </div>
       </div>

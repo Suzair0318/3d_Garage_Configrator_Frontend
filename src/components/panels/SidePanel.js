@@ -100,19 +100,19 @@ const accordionConfig = [
         type: 'select',
         name: 'leanWidth',
         label: 'Front Wall',
-        options: wallOptions.alignment.map(v => ({ value: v, label: v })),
+        options: leanOptions.width.map(v => ({ value: v, label: v })),
       },
       {
         type: 'select',
         name: 'leanLength',
         label: 'Back Wall',
-        options: wallOptions.alignment.map(v => ({ value: v, label: v })),
+        options: leanOptions.alignment.map(v => ({ value: v, label: v })),
       },
       {
         type: 'select',
         name: 'leanHeight',
         label: 'Side Wall',
-        options: wallOptions.alignment.map(v => ({ value: v, label: v })),
+        options: leanOptions.alignment.map(v => ({ value: v, label: v })),
       }
     ],
   },

@@ -99,42 +99,21 @@ const accordionConfig = [
       {
         type: 'select',
         name: 'leanWidth',
-        label: 'Width',
-        options: leanOptions.width.map(v => ({ value: v, label: v })),
+        label: 'Front Wall',
+        options: wallOptions.alignment.map(v => ({ value: v, label: v })),
       },
       {
         type: 'select',
         name: 'leanLength',
-        label: 'Length',
-        options: leanOptions.length.map(v => ({ value: v, label: v })),
+        label: 'Back Wall',
+        options: wallOptions.alignment.map(v => ({ value: v, label: v })),
       },
       {
         type: 'select',
         name: 'leanHeight',
-        label: 'Height',
-        options: leanOptions.height.map(v => ({ value: v, label: v })),
-      },
-      {
-        type: 'select',
-        name: 'leanAlignment',
-        label: 'Alignment',
-        options: leanOptions.alignment.map(v => ({ value: v, label: v })),
-      },
-      {
-        type: 'checkbox',
-        name: 'enclosedSides',
-        label: 'Enclosed Sides',
-      },
-      {
-        type: 'checkbox',
-        name: 'gutterSystem',
-        label: 'Gutter System',
-      },
-      {
-        type: 'checkbox',
-        name: 'concretePad',
-        label: 'Concrete Pad',
-      },
+        label: 'Side Wall',
+        options: wallOptions.alignment.map(v => ({ value: v, label: v })),
+      }
     ],
   },
 ];

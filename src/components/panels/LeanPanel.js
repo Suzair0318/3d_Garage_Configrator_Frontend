@@ -15,11 +15,23 @@ const LeanPanel = () => {
     height: '8',
     alignment: 'Back'
   });
-
-  const widthOptions = ['6', '8', '10', '12', '14', '16', '18', '20'];
-  const lengthOptions = ['8', '10', '12', '14', '16', '18', '20', '22', '24'];
-  const heightOptions = ['6', '7', '8', '9', '10', '11', '12'];
-  const alignmentOptions = ['Front', 'Back', 'Center'];
+  
+  const leanOptions = {
+    left: {
+      label: "Left",
+      width: ["6", "8", "10", "12", "14", "16", "18", "20"],
+      length: ["8", "10", "12", "14", "16", "18", "20", "22", "24"],
+      height: ["6", "7", "8", "9", "10", "11", "12"],
+      alignment: ["Front", "Back", "Center"]
+    },
+    right: {
+      label: "Right",
+      width: ["6", "8", "10", "12", "14", "16", "18", "20"],
+      length: ["8", "10", "12", "14", "16", "18", "20", "22", "24"],
+      height: ["6", "7", "8", "9", "10", "11", "12"],
+      alignment: ["Front", "Back", "Center"]
+    }
+  };
 
   const updateLeftConfig = (field, value) => {
     setLeftConfig(prev => ({ ...prev, [field]: value }));
@@ -50,7 +62,7 @@ const LeanPanel = () => {
               />
             </button>
             <label className="text-lg font-semibold text-gray-800">
-              Left
+              {leanOptions?.left?.label}
             </label>
           </div>
 
@@ -63,7 +75,7 @@ const LeanPanel = () => {
                 onChange={(e) => updateLeftConfig('width', e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-[#FF1717] focus:ring-2 focus:ring-red-100 bg-white"
               >
-                {widthOptions.map(option => (
+                {leanOptions?.left?.width?.map(option => (
                   <option key={option} value={option}>{option}</option>
                 ))}
               </select>
@@ -77,7 +89,7 @@ const LeanPanel = () => {
                 onChange={(e) => updateLeftConfig('length', e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-[#FF1717] focus:ring-2 focus:ring-red-100 bg-white"
               >
-                {lengthOptions.map(option => (
+                {leanOptions?.left?.length?.map(option => (
                   <option key={option} value={option}>{option}</option>
                 ))}
               </select>
@@ -91,7 +103,7 @@ const LeanPanel = () => {
                 onChange={(e) => updateLeftConfig('height', e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-[#FF1717] focus:ring-2 focus:ring-red-100 bg-white"
               >
-                {heightOptions.map(option => (
+                {leanOptions?.left?.height?.map(option => (
                   <option key={option} value={option}>{option}</option>
                 ))}
               </select>
@@ -105,7 +117,7 @@ const LeanPanel = () => {
                 onChange={(e) => updateLeftConfig('alignment', e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-[#FF1717] focus:ring-2 focus:ring-red-100 bg-white"
               >
-                {alignmentOptions.map(option => (
+                {leanOptions?.left?.alignment?.map(option => (
                   <option key={option} value={option}>{option}</option>
                 ))}
               </select>
@@ -131,7 +143,7 @@ const LeanPanel = () => {
               />
             </button>
             <label className="text-lg font-semibold text-gray-800">
-              Right
+              {leanOptions?.right?.label}
             </label>
           </div>
 
@@ -144,7 +156,7 @@ const LeanPanel = () => {
                 onChange={(e) => updateRightConfig('width', e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-[#FF1717] focus:ring-2 focus:ring-red-100 bg-white"
               >
-                {widthOptions.map(option => (
+                {leanOptions?.right?.width?.map(option => (
                   <option key={option} value={option}>{option}</option>
                 ))}
               </select>
@@ -158,7 +170,7 @@ const LeanPanel = () => {
                 onChange={(e) => updateRightConfig('length', e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-[#FF1717] focus:ring-2 focus:ring-red-100 bg-white"
               >
-                {lengthOptions.map(option => (
+                {leanOptions?.right?.length?.map(option => (
                   <option key={option} value={option}>{option}</option>
                 ))}
               </select>
@@ -172,7 +184,7 @@ const LeanPanel = () => {
                 onChange={(e) => updateRightConfig('height', e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-[#FF1717] focus:ring-2 focus:ring-red-100 bg-white"
               >
-                {heightOptions.map(option => (
+                {leanOptions?.right?.height?.map(option => (
                   <option key={option} value={option}>{option}</option>
                 ))}
               </select>
@@ -186,7 +198,7 @@ const LeanPanel = () => {
                 onChange={(e) => updateRightConfig('alignment', e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-[#FF1717] focus:ring-2 focus:ring-red-100 bg-white"
               >
-                {alignmentOptions.map(option => (
+                {leanOptions?.right?.alignment?.map(option => (
                   <option key={option} value={option}>{option}</option>
                 ))}
               </select>

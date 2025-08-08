@@ -45,10 +45,8 @@ export default function TopInfoPanel() {
       key: 'contact',
       title: 'Contact',
       Icon: EmailIcon,
-      contacts: [
-        { text: 'info@salesflow.com' },
-        { text: '+1 (999) 434-8943' },
-      ],
+      email: 'info@salesflow.com',
+      number: '+1 (999) 434-8943',
     },
   ];
 
@@ -68,17 +66,16 @@ export default function TopInfoPanel() {
                   </div>
                   <div className="flex flex-col">
                     <div className={`text-[8px] font-semibold text-[#FF1717] uppercase tracking-wider`}>{item.title}</div>
-                    {item.contacts ? (
+             
                       <div className="flex gap-0.5 text-[10px] ">
-                        {item.contacts.map((c, i) => (
-                          <span key={i} className={`flex items-center ${i > 0 ? 'ml-2' : ''} gap-1.5 text-gray-700 hover:text-gray-900 transition-colors`}>
-                            <span className="font-medium">{c.text}</span>
-                          </span>
-                        ))}
+                        <span className={`flex items-center gap-1.5 text-gray-700 hover:text-gray-900 transition-colors`}>
+                          <span className="font-medium">{item.email}</span>
+                        </span>
+                        <span className={`flex items-center ml-2 gap-1.5 text-gray-700 hover:text-gray-900 transition-colors`}>
+                          <span className="font-medium">{item.number}</span>
+                        </span>
                       </div>
-                    ) : (
-                      <div className="text-[10px] font-bold text-gray-600">{item.value}</div>
-                    )}
+             
                   </div>
                 </div>
                 {idx < items.length - 1 && (
@@ -88,7 +85,6 @@ export default function TopInfoPanel() {
             );
           })}
         </div>
-        
       </div>
       
       {/* Floating shadow */}

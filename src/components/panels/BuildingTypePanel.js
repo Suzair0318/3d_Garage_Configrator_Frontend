@@ -175,7 +175,7 @@ const BuildingTypePanel = (
         </p>
       </div>
       
-      <div className="p-2 space-y-2">
+      <div className="p-2 px-4 space-y-2">
         {categories.map((category, index) => {
           const isExpanded = expandedCategory === category.id;
           const isSelected = selectedCategory === category.id; // Use dynamic selected state

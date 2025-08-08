@@ -12,7 +12,6 @@ export default function LeftMenuPanel({ onMenuItemClick , activeIndex , setActiv
       setActivePanelItem(null);
     } else {
       // Show panel for the clicked item
-    
       setActivePanelItem(item);
       setIsPanelVisible(true);
     }
@@ -47,7 +46,7 @@ export default function LeftMenuPanel({ onMenuItemClick , activeIndex , setActiv
                   ${
                     isActive
                       ? 'bg-gradient-to-br from-slate-50 to-white border-l-4 border-l-[#FF1717] border-t-slate-200 border-r-slate-200 border-b-slate-200 shadow-lg shadow-red-500/10 scale-105'
-                      : 'bg-white/80 border-2 border-gray-200/60 text-gray-600 shadow-sm hover:bg-white hover:shadow-md hover:border-[#FF1717] hover:border'
+                      : 'bg-white/80 border-2 border-gray-200/60 text-gray-600 shadow-sm hover:bg-white hover:shadow-md  hover:border'
                   }
                 `}
                 onClick={() => handleItemClick(item, index)}

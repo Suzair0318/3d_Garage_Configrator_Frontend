@@ -166,7 +166,7 @@ const BuildingTypePanel = (
   return (
     <div className="h-full overflow-y-auto">
       {/* Header Section */}
-      <div className="p-3 mb-2">
+      <div className="px-6 mb-2">
         <h2 className="text-lg font-semibold text-[#07223D] mb-1">
           Pre-Designed Buildings
         </h2>

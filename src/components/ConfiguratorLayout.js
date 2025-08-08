@@ -77,7 +77,7 @@ export default function ConfiguratorLayout() {
     { icon: IconCurrency, label: 'Quotes', id: 'quotes' }
   ];
  
-  const [activeIndex, setActiveIndex] = useState(0); // Set "Building Type" as active by default
+  const [activeIndex, setActiveIndex] = useState(null); // Set "Building Type" as active by default
   const [activePanelItem, setActivePanelItem] = useState(null);
   const [isPanelVisible, setIsPanelVisible] = useState(false);
 
@@ -86,6 +86,7 @@ export default function ConfiguratorLayout() {
   const handleClosePanel = () => {
     setIsPanelVisible(false);
     setActivePanelItem(null);
+    // setActiveIndex(null);
   };
 
   return (

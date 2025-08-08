@@ -55,7 +55,7 @@ const SlidingPanel = ({ activeMenuItem, isVisible, onClose , setActiveIndex , se
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="fixed inset-0 z-30 "
+            className="fixed inset-0 z-10 "
             onClick={onClose}
           />
 

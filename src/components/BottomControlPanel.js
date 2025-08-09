@@ -32,11 +32,11 @@ const controlItems = [
 
 export default function BottomControlPanel({ onControlClick }) {
   return (
-    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-30 animate-in slide-in-from-bottom-5 duration-500">
+    <div className="fixed top-2 left-1/2 -translate-x-1/2 sm:inset-auto sm:bottom-6 sm:left-1/2 sm:-translate-x-1/2 z-30 animate-in slide-in-from-bottom-5 duration-500">
   {/* Main Panel */}
-  <div className="bg-gradient-to-br from-white via-gray-50 to-white backdrop-blur-xl rounded-xl shadow-lg border border-gray-200/50 ring-1 ring-black/5 p-2">
+  <div className="bg-gradient-to-br from-white via-gray-50 to-white backdrop-blur-xl rounded-xl shadow-lg border border-gray-200/50 ring-1 ring-black/5 p-1 md:p-1.5 lg:p-2 max-w-[85vw] sm:max-w-none">
     {/* Content Container */}
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-1 md:gap-1.5 lg:gap-2 overflow-x-auto sm:overflow-visible">
       {controlItems.map((item, index) => {
         const IconComponent = item.icon;
         const colorClasses = {
@@ -47,7 +47,7 @@ export default function BottomControlPanel({ onControlClick }) {
           <div 
             key={index}
             className={`
-              group relative flex items-center justify-center w-10 h-10 rounded-lg
+              group relative flex items-center justify-center w-8 h-8 md:w-9 md:h-9 lg:w-10 lg:h-10 rounded-lg
               bg-gradient-to-br from-gray-50 to-white border border-gray-200/60
               cursor-pointer transition-all duration-300 ease-out transform
               hover:scale-105 hover:text-white hover:shadow-lg
@@ -72,7 +72,7 @@ export default function BottomControlPanel({ onControlClick }) {
             </div>
             
             {/* Enhanced Tooltip */}
-            <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-1 group-hover:translate-y-0 pointer-events-none z-50">
+            <div className="hidden sm:block absolute bottom-full mb-2 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-1 group-hover:translate-y-0 pointer-events-none z-50">
               <div className="bg-gray-900 text-white px-2 py-1 rounded-md shadow-lg text-xs font-medium whitespace-nowrap">
                 {item.title}
                 {/* Tooltip arrow */}

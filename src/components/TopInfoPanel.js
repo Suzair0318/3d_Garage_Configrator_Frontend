@@ -51,31 +51,36 @@ export default function TopInfoPanel() {
   ];
 
   return (
-    <div className="fixed top-2 left-1/2 -translate-x-1/2 z-30 animate-in slide-in-from-top-5 duration-500">
+    <div className="hidden sm:block fixed top-2 left-1/2 -translate-x-1/2 z-30 animate-in slide-in-from-top-5 duration-500">
       {/* Main Panel */}
-      <div className="bg-gradient-to-br from-white via-gray-50 to-white backdrop-blur-xl rounded-xl shadow-2xl border border-gray-200/50 ring-1 ring-black/5 p-2">
+      <div className="bg-gradient-to-br from-white via-gray-50 to-white backdrop-blur-xl rounded-xl shadow-2xl border border-gray-200/50 ring-1 ring-black/5 p-2 sm:p-2 md:p-2">
         {/* Content Container */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 sm:gap-4 overflow-x-auto sm:overflow-visible">
           {items.map((item, idx) => {
             const BadgeIcon = item.Icon;
             return (
               <Fragment key={item.key}>
-                <div className="group flex items-center gap-2 px-2 py-1 rounded-lg bg-gradient-to-br hover:shadow-md transition-all duration-300">
+                <div className="group flex items-center gap-2 px-2 py-1 rounded-lg bg-gradient-to-br hover:shadow-md transition-all duration-300 max-w-full min-w-0 overflow-hidden">
                   <div className={`flex items-center justify-center w-6 h-6 bg-[#FF1717] rounded-lg shadow-sm group-hover:scale-110 transition-transform duration-300`}>
                     <BadgeIcon color="text-white" />
                   </div>
-                  <div className="flex flex-col">
+                  <div className="flex flex-col min-w-0 overflow-hidden">
                     <div className={`text-[8px] font-semibold text-[#FF1717] uppercase tracking-wider`}>{item.title}</div>
-             
-                      <div className="flex gap-0.5 text-[10px] ">
-                        <span className={`flex items-center gap-1.5 text-gray-700 hover:text-gray-900 transition-colors`}>
-                          <span className="font-medium">{item.email}</span>
+                    <div className="flex gap-0.5 text-[10px] ">
+                    <span className={`flex items-center gap-1.5 text-gray-700 hover:text-gray-900 transition-colors`}>
+                          <span className="font-medium">{item.value}</span>
                         </span>
-                        <span className={`flex items-center ml-2 gap-1.5 text-gray-700 hover:text-gray-900 transition-colors`}>
-                          <span className="font-medium">{item.number}</span>
+                        </div>
+                     { item?.email && item?.number &&  (
+                      <div className="flex flex-col lg:flex-row lg:flex-wrap gap-0.5 text-[10px] w-full overflow-hidden">
+                        <span className={`flex items-center gap-1.5 text-gray-700 hover:text-gray-900 transition-colors flex-1 min-w-0 max-w-full w-full lg:w-auto`}> 
+                          <span className="font-medium whitespace-normal break-words">{item.email}</span>
+                        </span>
+                        <span className={`flex items-center lg:ml-2 gap-1.5 text-gray-700 hover:text-gray-900 transition-colors flex-1 min-w-0 max-w-full w-full lg:w-auto`}>
+                          <span className="font-medium whitespace-normal break-words">{item.number}</span>
                         </span>
                       </div>
-             
+                  )}
                   </div>
                 </div>
                 {idx < items.length - 1 && (

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useConfigurator } from '../../context/ConfiguratorContext';
 
 const BuildingTypePanel = (
@@ -14,6 +14,57 @@ const BuildingTypePanel = (
   // const [expandedCategory, setExpandedCategory] = useState(null); // No expanded by default
   
   const [selectedCategory, setSelectedCategory] = useState(null);
+  
+  // Refs to measure dynamic content heights for smooth accordion animation
+  const contentRefs = useRef({}); // animated wrapper
+  const innerContentRefs = useRef({}); // actual content to measure
+  // Force re-render on resize so measured heights stay accurate on responsive breakpoints
+  const [, forceRerender] = useState(0);
+  useEffect(() => {
+    const onResize = () => forceRerender(v => v + 1);
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
+
+  // Keep outer animated maxHeight in sync with inner content size while expanded
+  useEffect(() => {
+    if (!expandedCategory) return;
+    const inner = innerContentRefs.current[expandedCategory];
+    const outer = contentRefs.current[expandedCategory];
+    if (!inner || !outer) return;
+
+    const apply = () => {
+      outer.style.maxHeight = `${inner.scrollHeight}px`;
+    };
+
+    // Apply immediately and observe future changes
+    apply();
+    let ro;
+    if (typeof ResizeObserver !== 'undefined') {
+      ro = new ResizeObserver(() => apply());
+      ro.observe(inner);
+    }
+
+    // Also handle images or async content inside
+    const imgs = inner.querySelectorAll ? inner.querySelectorAll('img') : [];
+    const listeners = [];
+    imgs.forEach((img) => {
+      if (!img.complete) {
+        const handler = () => apply();
+        img.addEventListener('load', handler);
+        listeners.push([img, handler]);
+      }
+    });
+
+    // On next frame, re-apply to catch layout after transition start
+    const raf = requestAnimationFrame(apply);
+
+    return () => {
+      if (ro) ro.disconnect();
+      listeners.forEach(([img, handler]) => img.removeEventListener('load', handler));
+      cancelAnimationFrame(raf);
+    };
+  }, [expandedCategory, selectedItem]);
 
   const categories = [
     {
@@ -179,13 +230,15 @@ const BuildingTypePanel = (
         {categories.map((category, index) => {
           const isExpanded = expandedCategory === category.id;
           const isSelected = selectedCategory === category.id; // Use dynamic selected state
+          // Keep parent highlighted if any child in this category is selected
+          const hasSelectedChild = !!selectedItem && category.items?.some(i => i.id === selectedItem.id);
 
           return (
             <div
               key={category.id}
               className={`
                 rounded-lg border transition-all duration-200 overflow-hidden bg-transparent
-                ${isExpanded
+                ${(isExpanded || hasSelectedChild)
                   ? 'border-[#FF1717]'
                   : 'border-[#07223D]'
                 }
@@ -200,11 +253,11 @@ const BuildingTypePanel = (
                 <div className="flex items-center space-x-2">
                   <span className={`
                     font-semibold text-sm
-                    ${isExpanded ? 'text-[#FF1717]' : 'text-[#07223D]'}
+                    ${(isExpanded || hasSelectedChild) ? 'text-[#FF1717]' : 'text-[#07223D]'}
                   `}>
                     {category.name}
                   </span>
-                  {isExpanded && (
+                  {(isExpanded || hasSelectedChild) && (
                     <span className="border border-[#FF1717] text-[#FF1717] text-xs px-1.5 py-0.5 rounded-[4px] font-medium">
                       selected
                     </span>
@@ -232,15 +285,30 @@ const BuildingTypePanel = (
                 )}
               </div>
 
-              {/* Category Content - Card Layout */}
-              {isExpanded && (
-                <div className="p-3 bg-transparent">
-                  <div className="flex flex-col gap-4">
+              {/* Category Content - Card Layout with smooth height animation */}
+              <div
+                ref={(el) => { if (el) contentRefs.current[category.id] = el; }}
+                className={`
+                  bg-transparent overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] px-4
+                  ${isExpanded ? 'opacity-100' : 'opacity-0'}
+                `}
+                style={{
+                  maxHeight: isExpanded
+                    ? `${innerContentRefs.current[category.id]?.scrollHeight || 0}px`
+                    : '0px',
+                  transitionDelay: isExpanded ? '60ms' : '0ms'
+                }}
+                aria-hidden={!isExpanded}
+              >
+                  <div
+                    ref={(el) => { if (el) innerContentRefs.current[category.id] = el; }}
+                    className={`flex flex-col gap-4 px-3 py-3 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${isExpanded ? 'translate-y-0' : '-translate-y-1'}`}
+                  >
                     {category.items.map((item, itemIndex) => (
                       <div
                         key={item.id}
                         className={`
-                          relative bg-white rounded-xl border-2 cursor-pointer transition-all duration-300 hover:shadow-lg hover:-translate-y-1
+                          relative bg-white rounded-xl border cursor-pointer transition-all duration-300 hover:shadow-lg hover:-translate-y-1
                           ${selectedItem?.id === item.id
                             ? 'border-[#FF1717] bg-[#FF1717] shadow-lg transform -translate-y-1'
                             : 'border-gray-200 hover:border-gray-300'
@@ -271,29 +339,29 @@ const BuildingTypePanel = (
                         )}
 
                         {/* Card Content */}
-                        <div className="p-4">
+                        <div className="p-3">
                           {/* Large Image/Icon */}
-                          <div className="w-full h-32 rounded-lg flex items-center justify-center text-5xl mb-4">
+                          <div className="w-full h-28 rounded-lg flex items-center justify-center text-4xl mb-3">
                             {item.image}
                           </div>
 
                           {/* Item Details */}
                           <div className="text-center">
-                            <h4 className="font-bold text-gray-900 mb-2 text-lg">
+                            <h4 className="font-bold text-gray-900 mb-1 text-base">
                               {item.name}
                             </h4>
 
                             {/* Dimensions in a clean grid */}
-                            <div className="grid grid-cols-3 gap-2 text-sm text-gray-600 mb-3">
-                              <div className="bg-gray-50 rounded-lg p-2">
+                            <div className="grid grid-cols-3 gap-1 text-sm text-gray-600 mb-2">
+                              <div className="bg-gray-50 rounded-lg p-1">
                                 <div className="font-medium text-gray-800">Width</div>
                                 <div>{item.width}'</div>
                               </div>
-                              <div className="bg-gray-50 rounded-lg p-2">
+                              <div className="bg-gray-50 rounded-lg p-1">
                                 <div className="font-medium text-gray-800">Length</div>
                                 <div>{item.length}'</div>
                               </div>
-                              <div className="bg-gray-50 rounded-lg p-2">
+                              <div className="bg-gray-50 rounded-lg p-1">
                                 <div className="font-medium text-gray-800">Height</div>
                                 <div>{item.height}'</div>
                               </div>
@@ -301,7 +369,7 @@ const BuildingTypePanel = (
 
                             {selectedItem?.id === item.id && (
                               <button
-                                className="w-full py-1  rounded-lg font-medium transition-all duration-200 bg-[#07223D] text-white shadow-md cursor-pointer"
+                                className="mx-auto w-[85%] sm:w-4/5 py-1 rounded-lg font-medium transition-all duration-200 bg-[#07223D] text-white shadow-md cursor-pointer text-sm"
                                 onClick={() => handle_open_size_panel()}
                               >
                                 Next ( Build & Size)
@@ -312,8 +380,7 @@ const BuildingTypePanel = (
                       </div>
                     ))}
                   </div>
-                </div>
-              )}
+              </div>
             </div>
           );
         })}

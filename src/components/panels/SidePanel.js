@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 const wallOptions = {
   front: ['Open', 'Closed', 'Partial'],
@@ -124,6 +124,58 @@ const SidePanel = () => {
   // Accordion expanded state
   const [expanded, setExpanded] = useState({ centerBuilding: true, leftLeans: false });
 
+  // Smooth accordion animation refs per section
+  const contentRefs = useRef({}); // animated wrapper
+  const innerContentRefs = useRef({}); // actual content
+  // Force re-render on resize so measured heights stay accurate
+  const [, forceRerender] = useState(0);
+  useEffect(() => {
+    const onResize = () => forceRerender(v => v + 1);
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
+
+  // Keep animated maxHeight in sync with inner content size while expanded
+  useEffect(() => {
+    const observers = [];
+    const listeners = [];
+
+    const applyForKey = (key) => {
+      const inner = innerContentRefs.current[key];
+      const outer = contentRefs.current[key];
+      if (!inner || !outer) return;
+      outer.style.maxHeight = `${inner.scrollHeight}px`;
+    };
+
+    Object.keys(expanded).forEach((key) => {
+      if (!expanded[key]) return;
+      // Apply immediately and observe future changes
+      applyForKey(key);
+      const inner = innerContentRefs.current[key];
+      if (inner && typeof ResizeObserver !== 'undefined') {
+        const ro = new ResizeObserver(() => applyForKey(key));
+        ro.observe(inner);
+        observers.push(ro);
+      }
+      // Handle async assets like images
+      const imgs = inner?.querySelectorAll ? inner.querySelectorAll('img') : [];
+      imgs.forEach((img) => {
+        if (!img.complete) {
+          const handler = () => applyForKey(key);
+          img.addEventListener('load', handler);
+          listeners.push([img, handler]);
+        }
+      });
+      // Re-apply next frame to catch layout after transition start
+      requestAnimationFrame(() => applyForKey(key));
+    });
+
+    return () => {
+      observers.forEach(o => o.disconnect());
+      listeners.forEach(([img, handler]) => img.removeEventListener('load', handler));
+    };
+  }, [expanded]);
+
   // Toggle accordion
   const handleAccordion = (key) => {
     setExpanded((prev) => ({ ...prev, [key]: !prev[key] }));
@@ -132,14 +184,14 @@ const SidePanel = () => {
   // Handle field changes
   const handleFieldChange = (name, value, type) => {
     setFields((prev) => ({ ...prev, [name]: type === 'checkbox' ? !prev[name] : value }));
-  };
+  };[]
 
   return (
     <div className="h-full overflow-y-auto">
       <div className="p-4 space-y-4">
         {/* Vertical Panels Toggle */}
         <div className="flex items-center justify-between">
-          <span className="text-sm font-medium text-gray-700">Vertical Panels</span>
+          <span className="text-sm font-semibold text-[#07223D]">Vertical Panels</span>
           <button
             onClick={() => handleFieldChange('verticalPanels', !fields.verticalPanels, 'checkbox')}
             className={`
@@ -158,24 +210,61 @@ const SidePanel = () => {
 
         {/* Dynamic Accordions */}
         {accordionConfig.map(acc => (
-          <div className="border border-gray-300 rounded-md bg-white" key={acc.key}>
-            <button
+          <div
+            className={`
+              rounded-lg border transition-all duration-200 overflow-hidden bg-transparent
+              ${expanded[acc.key] ? 'border-[#FF1717]' : 'border-[#07223D]'}
+            `}
+            key={acc.key}
+          >
+            <div
+              className="flex items-center justify-between px-3 py-2 cursor-pointer transition-all duration-150 bg-transparent"
               onClick={() => handleAccordion(acc.key)}
-              className="w-full flex items-center justify-between px-3 py-2 text-left bg-white hover:bg-gray-50 rounded-md focus:outline-none focus:border-[#FF1717] focus:ring-2 focus:ring-red-100"
             >
-              <span className="text-sm text-gray-700">{acc.label}</span>
-              <svg
-                className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${expanded[acc.key] ? 'rotate-180' : ''}`}
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
+              <span
+                className={`font-semibold text-lg ${expanded[acc.key] ? 'text-[#FF1717]' : 'text-[#07223D]'}`}
               >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
+                {acc.label}
+              </span>
+              {expanded[acc.key] ? (
+                <svg
+                  className="w-4 h-4 text-[#FF1717] transition-all duration-150"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              ) : (
+                <svg
+                  className="w-4 h-4 text-[#07223D] transition-all duration-150"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                </svg>
+              )}
+            </div>
 
-            {expanded[acc.key] && (
-              <div className="px-3 py-4 border-t border-gray-200 space-y-4">
+            <div
+              ref={(el) => { if (el) contentRefs.current[acc.key] = el; }}
+              className={`
+                bg-transparent overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] px-3
+                ${expanded[acc.key] ? 'opacity-100' : 'opacity-0'}
+              `}
+              style={{
+                maxHeight: expanded[acc.key]
+                  ? `${innerContentRefs.current[acc.key]?.scrollHeight || 0}px`
+                  : '0px',
+                transitionDelay: expanded[acc.key] ? '60ms' : '0ms'
+              }}
+              aria-hidden={!expanded[acc.key]}
+            >
+              <div
+                ref={(el) => { if (el) innerContentRefs.current[acc.key] = el; }}
+                className={`border-t border-gray-200 space-y-4 py-4 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${expanded[acc.key] ? 'translate-y-0' : '-translate-y-1'}`}
+              >
                 {acc.fields.map(field => {
                   // RADIO GROUP
                   if (field.type === 'radio') {
@@ -191,7 +280,7 @@ const SidePanel = () => {
                               onChange={e => handleFieldChange(field.name, opt.value, 'radio')}
                               className="w-4 h-4 text-[#FF1717] border-gray-300 focus:ring-[#FF1717] mr-2"
                             />
-                            <span className="text-sm text-gray-700">{opt.label}</span>
+                            <span className="text-sm font-semibold text-[#07223D] tracking-wide">{opt.label}</span>
                           </label>
                         ))}
                       </div>
@@ -201,7 +290,7 @@ const SidePanel = () => {
                   if (field.type === 'select') {
                     return (
                       <div key={field.name}>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">{field.label}</label>
+                        <label className="block text-sm font-semibold text-[#07223D]  mb-1">{field.label}</label>
                         <select
                           value={fields[field.name]}
                           onChange={e => handleFieldChange(field.name, e.target.value, 'select')}
@@ -224,15 +313,15 @@ const SidePanel = () => {
                           onChange={() => handleFieldChange(field.name, !fields[field.name], 'checkbox')}
                           className="w-4 h-4 text-[#FF1717] border-gray-300 rounded focus:ring-[#FF1717] mr-2"
                         />
-                        <span className="text-sm text-gray-700">{field.label}</span>
+                        <span className="text-sm font-semibold text-[#07223D] tracking-wide">{field.label}</span>
                       </label>
                     );
                   }
                   return null;
                 })}
               </div>
-            )}
-          </div>
+            </div>
+           </div>
         ))}
 
       </div>

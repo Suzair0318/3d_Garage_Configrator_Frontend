@@ -11,7 +11,7 @@ const BuildingTypePanel = (
     setActivePanelItem
   }
 ) => {
-  // const [expandedCategory, setExpandedCategory] = useState(null); // No expanded by default
+
   
   const [selectedCategory, setSelectedCategory] = useState(null);
   
@@ -252,7 +252,7 @@ const BuildingTypePanel = (
               >
                 <div className="flex items-center space-x-2">
                   <span className={`
-                    font-semibold text-sm
+                    font-semibold text-lg
                     ${(isExpanded || hasSelectedChild) ? 'text-[#FF1717]' : 'text-[#07223D]'}
                   `}>
                     {category.name}

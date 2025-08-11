@@ -69,7 +69,7 @@ const LeanPanel = () => {
           <div className="space-y-4 ml-6">
             {/* Left Width */}
             <div>
-              <label className="block text-sm font-mono text-gray-700 mb-2">Width</label>
+              <label className="block text-sm font-semibold text-[#07223D] mb-2">Width</label>
               <select 
                 value={leftConfig.width} 
                 onChange={(e) => updateLeftConfig('width', e.target.value)}
@@ -83,7 +83,7 @@ const LeanPanel = () => {
 
             {/* Left Length */}
             <div>
-              <label className="block text-sm font-mono text-gray-700 mb-2">Length</label>
+              <label className="block text-sm font-semibold text-[#07223D]  mb-2">Length</label>
               <select 
                 value={leftConfig.length} 
                 onChange={(e) => updateLeftConfig('length', e.target.value)}
@@ -97,7 +97,7 @@ const LeanPanel = () => {
 
             {/* Left Height */}
             <div>
-              <label className="block text-sm font-mono text-gray-700 mb-2">Height</label>
+              <label className="block text-sm font-semibold text-[#07223D]  mb-2">Height</label>
               <select 
                 value={leftConfig.height} 
                 onChange={(e) => updateLeftConfig('height', e.target.value)}
@@ -111,7 +111,7 @@ const LeanPanel = () => {
 
             {/* Left Alignment */}
             <div>
-              <label className="block text-sm font-mono text-gray-700 mb-2">Alignment</label>
+              <label className="block text-sm font-semibold text-[#07223D]  mb-2">Alignment</label>
               <select 
                 value={leftConfig.alignment} 
                 onChange={(e) => updateLeftConfig('alignment', e.target.value)}
@@ -150,7 +150,7 @@ const LeanPanel = () => {
           <div className="space-y-4 ml-6">
             {/* Right Width */}
             <div>
-              <label className="block text-sm font-mono text-gray-700 mb-2">Width</label>
+              <label className="block text-sm font-semibold text-[#07223D] mb-2">Width</label>
               <select 
                 value={rightConfig.width} 
                 onChange={(e) => updateRightConfig('width', e.target.value)}
@@ -164,7 +164,7 @@ const LeanPanel = () => {
 
             {/* Right Length */}
             <div>
-              <label className="block text-sm font-mono text-gray-700 mb-2">Length</label>
+              <label className="block text-sm font-semibold text-[#07223D] mb-2">Length</label>
               <select 
                 value={rightConfig.length} 
                 onChange={(e) => updateRightConfig('length', e.target.value)}
@@ -178,7 +178,7 @@ const LeanPanel = () => {
 
             {/* Right Height */}
             <div>
-              <label className="block text-sm font-mono text-gray-700 mb-2">Height</label>
+              <label className="block text-sm font-semibold text-[#07223D] mb-2">Height</label>
               <select 
                 value={rightConfig.height} 
                 onChange={(e) => updateRightConfig('height', e.target.value)}
@@ -192,7 +192,7 @@ const LeanPanel = () => {
 
             {/* Right Alignment */}
             <div>
-              <label className="block text-sm font-mono text-gray-700 mb-2">Alignment</label>
+              <label className="block text-sm font-semibold text-[#07223D] mb-2">Alignment</label>
               <select 
                 value={rightConfig.alignment} 
                 onChange={(e) => updateRightConfig('alignment', e.target.value)}

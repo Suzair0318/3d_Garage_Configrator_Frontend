@@ -31,22 +31,22 @@ const SizePanel = () => {
             </div>
             <div className="text-center">
               <div className="text-6xl mb-2">🏗️</div>
-              <h4 className="font-semibold text-gray-800 mb-2">STANDARD CARPORTS</h4>
-              <button className="bg-gray-800 text-white px-4 py-2 rounded-md text-sm hover:bg-gray-700 transition-colors">
+              <h4 className="font-semibold text-[#07223D] mb-2">STANDARD CARPORTS</h4>
+              <button className="bg-[#07223D] text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-700 transition-colors">
                 Change Building
               </button>
             </div>
           </div>
         </div>
-
+     
         {/* Building Size Section */}
         <div>
-          <h3 className="font-semibold text-gray-800 mb-4">Building Size</h3>
+          <h3 className="font-semibold text-lg text-gray-800 mb-4">Building Size</h3>
           
           <div className="space-y-4">
             {/* Width */}
             <div>
-              <label className="block text-sm font-mono text-gray-700 mb-2">Width</label>
+              <label className="block text-sm font-semibold tracking-wide text-[#07223D] mb-2">Width</label>
               <select 
                 value={width} 
                 onChange={(e) => setWidth(e.target.value)}
@@ -60,7 +60,7 @@ const SizePanel = () => {
 
             {/* Length */}
             <div>
-              <label className="block text-sm font-mono text-gray-700 mb-2">Length</label>
+              <label className="block text-sm font-semibold tracking-wide text-[#07223D] mb-2">Length</label>
               <select 
                 value={length} 
                 onChange={(e) => setLength(e.target.value)}
@@ -74,7 +74,7 @@ const SizePanel = () => {
 
             {/* Height */}
             <div>
-              <label className="block text-sm font-mono text-gray-700 mb-2">Height</label>
+              <label className="block text-sm font-semibold tracking-wide text-[#07223D] mb-2">Height</label>
               <select 
                 value={height} 
                 onChange={(e) => setHeight(e.target.value)}
@@ -90,9 +90,9 @@ const SizePanel = () => {
 
         {/* Roof Style Section */}
         <div>
-          <h3 className="font-semibold text-gray-800 mb-4">Roof Style</h3>
+          <h3 className="font-semibold text-lg text-gray-800 mb-4">Roof Style</h3>
           <div>
-            <label className="block text-sm font-mono text-gray-700 mb-2">Style</label>
+            <label className="block text-sm font-semibold tracking-wide text-[#07223D] mb-2">Style</label>
             <select 
               value={roofStyle} 
               onChange={(e) => setRoofStyle(e.target.value)}
@@ -107,7 +107,7 @@ const SizePanel = () => {
 
         {/* Roof Pitch Section */}
         <div>
-          <h3 className="font-semibold text-gray-800 mb-4">Roof Pitch</h3>
+          <h3 className="font-semibold text-lg text-gray-800 mb-4">Roof Pitch</h3>
           <div className="space-y-2">
             <label className="flex items-center">
               <input
@@ -118,7 +118,7 @@ const SizePanel = () => {
                 onChange={(e) => setRoofPitch(e.target.value)}
                 className="w-4 h-4 text-[#FF1717] border-gray-300 focus:ring-[#FF1717]"
               />
-              <span className="ml-2 text-sm text-gray-700">3/12 (Standard)</span>
+              <span className="ml-2 text-sm font-semibold tracking-wide text-[#07223D]">3/12 (Standard)</span>
             </label>
             <label className="flex items-center">
               <input
@@ -129,14 +129,14 @@ const SizePanel = () => {
                 onChange={(e) => setRoofPitch(e.target.value)}
                 className="w-4 h-4 text-[#FF1717] border-gray-300 focus:ring-[#FF1717]"
               />
-              <span className="ml-2 text-sm text-gray-700">4/12</span>
+              <span className="ml-2 text-sm font-semibold tracking-wide text-[#07223D]">4/12</span>
             </label>
           </div>
         </div>
 
         {/* Gauge Section */}
         <div>
-          <h3 className="font-semibold text-gray-800 mb-4">Gauge</h3>
+          <h3 className="font-semibold text-lg text-[#07223D] mb-4">Gauge</h3>
           <div className="space-y-2">
             <label className="flex items-center">
               <input
@@ -147,7 +147,7 @@ const SizePanel = () => {
                 onChange={(e) => setGauge(e.target.value)}
                 className="w-4 h-4 text-[#FF1717] border-gray-300 focus:ring-[#FF1717]"
               />
-              <span className="ml-2 text-sm text-gray-700">12 Gauge</span>
+              <span className="ml-2 text-sm font-semibold tracking-wide text-[#07223D]">12 Gauge</span>
             </label>
             <label className="flex items-center">
               <input
@@ -158,7 +158,7 @@ const SizePanel = () => {
                 onChange={(e) => setGauge(e.target.value)}
                 className="w-4 h-4 text-[#FF1717] border-gray-300 focus:ring-[#FF1717]"
               />
-              <span className="ml-2 text-sm text-gray-700">14 Gauge</span>
+              <span className="ml-2 text-sm font-semibold tracking-wide text-[#07223D]">14 Gauge</span>
             </label>
           </div>
         </div>

@@ -1,68 +1,111 @@
 import React, { useState } from 'react';
 
 const ColorsPanel = () => {
-  const [selectedRoof, setSelectedRoof] = useState('charcoal');
-  const [selectedSiding, setSelectedSiding] = useState('white');
-  const [selectedTrim, setSelectedTrim] = useState('black');
+  const [selectedRoof, setSelectedRoof] = useState('green');
+  const [selectedTrim, setSelectedTrim] = useState('green');
+  const [selectedWall, setSelectedWall] = useState('red');
+  const [addWainscot, setAddWainscot] = useState(false);
 
   const roofColors = [
-    { id: 'charcoal', name: 'Charcoal Gray', color: '#36454F' },
-    { id: 'brown', name: 'Rustic Brown', color: '#8B4513' },
-    { id: 'green', name: 'Forest Green', color: '#228B22' },
-    { id: 'red', name: 'Barn Red', color: '#AA4A44' },
-    { id: 'blue', name: 'Ocean Blue', color: '#4682B4' },
-  ];
-
-  const sidingColors = [
-    { id: 'white', name: 'Classic White', color: '#FFFFFF' },
-    { id: 'beige', name: 'Warm Beige', color: '#F5F5DC' },
-    { id: 'gray', name: 'Stone Gray', color: '#708090' },
-    { id: 'tan', name: 'Desert Tan', color: '#D2B48C' },
-    { id: 'cream', name: 'Antique Cream', color: '#FFFDD0' },
+    { id: 'brown', name: 'Brown', color: '#8B4513' },
+    { id: 'charcoal', name: 'Charcoal', color: '#36454F' },
+    { id: 'green', name: 'Green', color: '#228B22' },
+    { id: 'red', name: 'Red', color: '#DC143C' },
+    { id: 'tan', name: 'Tan', color: '#D2B48C' },
+    { id: 'darkBrown', name: 'Dark Brown', color: '#654321' },
+    { id: 'darkGreen', name: 'Dark Green', color: '#006400' },
+    { id: 'lightBlue', name: 'Light Blue', color: '#ADD8E6' },
+    { id: 'blue', name: 'Blue', color: '#0066CC' },
+    { id: 'burgundy', name: 'Burgundy', color: '#800020' },
+    { id: 'cream', name: 'Cream', color: '#FFFDD0' },
+    { id: 'gray', name: 'Gray', color: '#808080' },
+    { id: 'darkGray', name: 'Dark Gray', color: '#555555' },
+    { id: 'beige', name: 'Beige', color: '#F5F5DC' },
+    { id: 'steelBlue', name: 'Steel Blue', color: '#4682B4' },
+    { id: 'lightTan', name: 'Light Tan', color: '#E6D3A3' },
+    { id: 'white', name: 'White', color: '#FFFFFF' }
   ];
 
   const trimColors = [
-    { id: 'black', name: 'Classic Black', color: '#000000' },
-    { id: 'white', name: 'Pure White', color: '#FFFFFF' },
-    { id: 'brown', name: 'Dark Brown', color: '#654321' },
-    { id: 'gray', name: 'Charcoal Gray', color: '#36454F' },
+    { id: 'brown', name: 'Brown', color: '#8B4513' },
+    { id: 'charcoal', name: 'Charcoal', color: '#36454F' },
+    { id: 'green', name: 'Green', color: '#228B22' },
+    { id: 'red', name: 'Red', color: '#DC143C' },
+    { id: 'tan', name: 'Tan', color: '#D2B48C' },
+    { id: 'darkBrown', name: 'Dark Brown', color: '#654321' },
+    { id: 'darkGreen', name: 'Dark Green', color: '#006400' },
+    { id: 'lightBlue', name: 'Light Blue', color: '#ADD8E6' },
+    { id: 'blue', name: 'Blue', color: '#0066CC' },
+    { id: 'burgundy', name: 'Burgundy', color: '#800020' },
+    { id: 'cream', name: 'Cream', color: '#FFFDD0' },
+    { id: 'gray', name: 'Gray', color: '#808080' },
+    { id: 'darkGray', name: 'Dark Gray', color: '#555555' },
+    { id: 'beige', name: 'Beige', color: '#F5F5DC' },
+    { id: 'steelBlue', name: 'Steel Blue', color: '#4682B4' },
+    { id: 'lightTan', name: 'Light Tan', color: '#E6D3A3' },
+    { id: 'white', name: 'White', color: '#FFFFFF' }
   ];
 
-  const ColorSelector = ({ title, colors, selected, onSelect }) => (
-    <div className="mb-6">
-      <h4 className="font-medium text-gray-700 mb-3">{title}</h4>
-      <div className="grid grid-cols-3 gap-3">
+  const wallColors = [
+    { id: 'brown', name: 'Brown', color: '#8B4513' },
+    { id: 'charcoal', name: 'Charcoal', color: '#36454F' },
+    { id: 'burgundy', name: 'Burgundy', color: '#800020' },
+    { id: 'red', name: 'Cardinal Red', color: '#DC143C' },
+    { id: 'tan', name: 'Tan', color: '#D2B48C' },
+    { id: 'darkBrown', name: 'Dark Brown', color: '#654321' },
+    { id: 'darkGreen', name: 'Dark Green', color: '#006400' },
+    { id: 'lightBlue', name: 'Light Blue', color: '#ADD8E6' },
+    { id: 'blue', name: 'Blue', color: '#0066CC' },
+    { id: 'darkBurgundy', name: 'Dark Burgundy', color: '#5D001E' },
+    { id: 'cream', name: 'Cream', color: '#FFFDD0' },
+    { id: 'gray', name: 'Gray', color: '#808080' },
+    { id: 'darkGray', name: 'Dark Gray', color: '#555555' },
+    { id: 'beige', name: 'Beige', color: '#F5F5DC' },
+    { id: 'steelBlue', name: 'Steel Blue', color: '#4682B4' },
+    { id: 'lightTan', name: 'Light Tan', color: '#E6D3A3' },
+    { id: 'white', name: 'White', color: '#FFFFFF' }
+  ];
+
+  const ColorSelector = ({ title, colors, selected, onSelect, selectedColorName }) => (
+    <div className="mb-8">
+      <div className="flex justify-between items-center mb-4">
+        <h4 className="text-lg font-medium text-gray-800">{title}</h4>
+        <span className="text-sm text-gray-600 font-medium">{selectedColorName}</span>
+      </div>
+      
+      <div className="grid grid-cols-7 gap-2">
         {colors.map((color) => (
           <div
             key={color.id}
             onClick={() => onSelect(color.id)}
-            className={`
-              relative p-3 rounded-lg border-2 cursor-pointer transition-all duration-200 hover:scale-105 group overflow-hidden
-              ${selected === color.id
-                ? 'border-[#FF1717] shadow-md'
-                : 'border-gray-200 hover:border-gray-300'
-              }
-            `}
+            className="relative cursor-pointer group"
           >
-            {/* Hover shimmer effect */}
-            <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-500 bg-gradient-to-r from-transparent via-white/30 to-transparent" />
-            
-            <div className="flex items-center space-x-3 relative">
-              <div
-                className="w-8 h-8 rounded-full border-2 border-gray-200 shadow-sm"
-                style={{ backgroundColor: color.color }}
-              />
-              <div>
-                <div className="text-sm font-medium text-gray-800">
-                  {color.name}
+            <div
+              className={`
+                w-10 h-10 rounded-lg border-2 transition-all duration-200 hover:scale-110 hover:shadow-lg
+                ${selected === color.id 
+                  ? 'border-gray-400 shadow-md' 
+                  : 'border-gray-300 hover:border-gray-400'
+                }
+              `}
+              style={{ backgroundColor: color.color }}
+            >
+              {selected === color.id && (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <svg 
+                    className="w-5 h-5 text-green-500 drop-shadow-lg" 
+                    fill="currentColor" 
+                    viewBox="0 0 20 20"
+                  >
+                    <path 
+                      fillRule="evenodd" 
+                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" 
+                      clipRule="evenodd" 
+                    />
+                  </svg>
                 </div>
-              </div>
+              )}
             </div>
-            {selected === color.id && (
-              <div className="absolute top-1 right-1">
-                <div className="w-3 h-3 bg-[#FF1717] rounded-full"></div>
-              </div>
-            )}
           </div>
         ))}
       </div>
@@ -72,22 +115,12 @@ const ColorsPanel = () => {
   return (
     <div className="h-full overflow-y-auto">
       <div className="p-6">
-        <h3 className="text-lg font-semibold text-gray-800 mb-4">
-          Choose Colors
-        </h3>
-
         <ColorSelector
           title="Roof Color"
           colors={roofColors}
           selected={selectedRoof}
           onSelect={setSelectedRoof}
-        />
-
-        <ColorSelector
-          title="Siding Color"
-          colors={sidingColors}
-          selected={selectedSiding}
-          onSelect={setSelectedSiding}
+          selectedColorName={roofColors.find(c => c.id === selectedRoof)?.name || 'Burgundy'}
         />
 
         <ColorSelector
@@ -95,35 +128,40 @@ const ColorsPanel = () => {
           colors={trimColors}
           selected={selectedTrim}
           onSelect={setSelectedTrim}
+          selectedColorName={trimColors.find(c => c.id === selectedTrim)?.name || 'Burgundy'}
         />
 
-        {/* Color Preview */}
-        <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-          <h4 className="font-medium text-gray-700 mb-3">Color Preview</h4>
-          <div className="flex items-center justify-center">
-            <div className="relative w-32 h-24 rounded-lg overflow-hidden shadow-lg">
-              {/* Roof */}
-              <div
-                className="absolute top-0 left-0 right-0 h-6"
-                style={{ backgroundColor: roofColors.find(c => c.id === selectedRoof)?.color }}
+        <ColorSelector
+          title="Wall Color"
+          colors={wallColors}
+          selected={selectedWall}
+          onSelect={setSelectedWall}
+          selectedColorName={wallColors.find(c => c.id === selectedWall)?.name || 'Cardinal Red'}
+        />
+
+        {/* Roof Pitch + Wainscot */}
+        <div className="mt-8">
+          <h4 className="text-lg font-medium text-gray-800 mb-3">Roof Pitch</h4>
+          <label className="inline-flex items-center gap-3 select-none cursor-pointer">
+            <div className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${addWainscot ? 'bg-green-500' : 'bg-gray-300'}`}>
+              <input
+                type="checkbox"
+                className="sr-only"
+                checked={addWainscot}
+                onChange={(e) => setAddWainscot(e.target.checked)}
               />
-              {/* Siding */}
-              <div
-                className="absolute top-6 left-0 right-0 bottom-2"
-                style={{ backgroundColor: sidingColors.find(c => c.id === selectedSiding)?.color }}
-              />
-              {/* Trim */}
-              <div
-                className="absolute bottom-0 left-0 right-0 h-2"
-                style={{ backgroundColor: trimColors.find(c => c.id === selectedTrim)?.color }}
-              />
+              <span className={`inline-block h-5 w-5 transform rounded-full bg-white shadow transition-transform ${addWainscot ? 'translate-x-5' : 'translate-x-1'}`} />
             </div>
-          </div>
-          <div className="text-center mt-3 text-sm text-gray-600">
-            <div>Roof: {roofColors.find(c => c.id === selectedRoof)?.name}</div>
-            <div>Siding: {sidingColors.find(c => c.id === selectedSiding)?.name}</div>
-            <div>Trim: {trimColors.find(c => c.id === selectedTrim)?.name}</div>
-          </div>
+            <span className="text-sm text-gray-800 font-medium">Add Wainscot (Full Building)</span>
+          </label>
+        </div>
+
+        {/* Disclaimer */}
+        <div className="mt-8">
+          <h4 className="text-lg font-semibold text-gray-800 mb-2">Disclaimer</h4>
+          <p className="text-sm leading-6 text-gray-600">
+            Due to the variations in monitors and browsers, the color samples displayed on this tool may appear different on different monitors and devices. Computer monitors are not all calibrated equally and color reproduction on the Internet is not precise. Since it is not possible to guarantee our online colors will look the same on all computers, we do not guarantee that what you see accurately portrays the color of the actual color of the Sheet Metal. We do our very best to make sure our samples are as close to the exact product as possible, but cannot guarantee that what you see is an exact sample. If it is important that the sample be exact, it is highly recommended that once you contact us.
+          </p>
         </div>
       </div>
     </div>

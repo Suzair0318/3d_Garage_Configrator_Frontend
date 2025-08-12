@@ -69,8 +69,8 @@ const ColorsPanel = () => {
   const ColorSelector = ({ title, colors, selected, onSelect, selectedColorName }) => (
     <div className="mb-8">
       <div className="flex justify-between items-center mb-4">
-        <h4 className="text-lg font-medium text-gray-800">{title}</h4>
-        <span className="text-sm text-gray-600 font-medium">{selectedColorName}</span>
+        <h4 className="text-lg font-semibold text-[#07223D] tracking-wide">{title}</h4>
+        <span className="text-sm text-[#FF1717] font-semibold bg-[#FF1717]/10 px-3 py-1 rounded-full border border-[#FF1717]/20">{selectedColorName}</span>
       </div>
       
       <div className="grid grid-cols-7 gap-2">
@@ -82,27 +82,31 @@ const ColorsPanel = () => {
           >
             <div
               className={`
-                w-10 h-10 rounded-lg border-2 transition-all duration-200 hover:scale-110 hover:shadow-lg
+                w-10 h-10 rounded-lg border-2 transition-all duration-200 hover:scale-110 hover:shadow-xl
                 ${selected === color.id 
-                  ? 'border-gray-400 shadow-md' 
-                  : 'border-gray-300 hover:border-gray-400'
+                  ? 'border-[#FF1717] shadow-xl ring-2 ring-[#FF1717]/30' 
+                  : 'border-gray-200 hover:border-[#FF1717]/50 shadow-md'
                 }
               `}
               style={{ backgroundColor: color.color }}
             >
               {selected === color.id && (
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <svg 
-                    className="w-5 h-5 text-green-500 drop-shadow-lg" 
-                    fill="currentColor" 
-                    viewBox="0 0 20 20"
-                  >
-                    <path 
-                      fillRule="evenodd" 
-                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" 
-                      clipRule="evenodd" 
-                    />
-                  </svg>
+                  <div className="bg-[#FF1717] rounded-full p-0.5 shadow-lg">
+                    <svg 
+                      className="w-4 h-4 text-white" 
+                      fill="none" 
+                      stroke="currentColor" 
+                      strokeWidth="3"
+                      viewBox="0 0 24 24"
+                    >
+                      <path 
+                        strokeLinecap="round" 
+                        strokeLinejoin="round" 
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                  </div>
                 </div>
               )}
             </div>
@@ -113,7 +117,7 @@ const ColorsPanel = () => {
   );
 
   return (
-    <div className="h-full overflow-y-auto">
+    <div className="h-full overflow-y-auto bg-gradient-to-br from-slate-50 to-white">
       <div className="p-6">
         <ColorSelector
           title="Roof Color"
@@ -141,25 +145,25 @@ const ColorsPanel = () => {
 
         {/* Roof Pitch + Wainscot */}
         <div className="mt-8">
-          <h4 className="text-lg font-medium text-gray-800 mb-3">Roof Pitch</h4>
-          <label className="inline-flex items-center gap-3 select-none cursor-pointer">
-            <div className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${addWainscot ? 'bg-green-500' : 'bg-gray-300'}`}>
+          <h4 className="text-lg font-semibold text-[#07223D] mb-3 tracking-wide">Roof Pitch</h4>
+          <label className="inline-flex items-center gap-3 select-none cursor-pointer group">
+            <div className={`relative inline-flex h-6 w-11 items-center rounded-full transition-all duration-300 shadow-inner ${addWainscot ? 'bg-gradient-to-r from-[#FF1717] to-[#FF4444]' : 'bg-gray-300'}`}>
               <input
                 type="checkbox"
                 className="sr-only"
                 checked={addWainscot}
                 onChange={(e) => setAddWainscot(e.target.checked)}
               />
-              <span className={`inline-block h-5 w-5 transform rounded-full bg-white shadow transition-transform ${addWainscot ? 'translate-x-5' : 'translate-x-1'}`} />
+              <span className={`inline-block h-5 w-5 transform rounded-full bg-white shadow-lg transition-transform duration-300 ${addWainscot ? 'translate-x-5' : 'translate-x-1'}`} />
             </div>
-            <span className="text-sm text-gray-800 font-medium">Add Wainscot (Full Building)</span>
+            <span className="text-sm text-[#07223D] font-semibold group-hover:text-[#FF1717] transition-colors">Add Wainscot (Full Building)</span>
           </label>
         </div>
 
         {/* Disclaimer */}
-        <div className="mt-8">
-          <h4 className="text-lg font-semibold text-gray-800 mb-2">Disclaimer</h4>
-          <p className="text-sm leading-6 text-gray-600">
+        <div className="mt-8 p-4 bg-white rounded-lg border border-gray-200 shadow-sm">
+          <h4 className="text-lg font-semibold text-[#07223D] mb-3 tracking-wide">Disclaimer</h4>
+          <p className="text-sm leading-6 text-gray-700">
             Due to the variations in monitors and browsers, the color samples displayed on this tool may appear different on different monitors and devices. Computer monitors are not all calibrated equally and color reproduction on the Internet is not precise. Since it is not possible to guarantee our online colors will look the same on all computers, we do not guarantee that what you see accurately portrays the color of the actual color of the Sheet Metal. We do our very best to make sure our samples are as close to the exact product as possible, but cannot guarantee that what you see is an exact sample. If it is important that the sample be exact, it is highly recommended that once you contact us.
           </p>
         </div>

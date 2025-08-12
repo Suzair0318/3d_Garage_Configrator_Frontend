@@ -159,7 +159,7 @@ const SidePanel = () => {
   // Field state
   const [fields, setFields] = useState(initialFieldState);
   // Accordion expanded state
-  const [expanded, setExpanded] = useState({ centerBuilding: true, leftLeans: false , rightLeans: false });
+  const [expanded, setExpanded] = useState({ centerBuilding: false, leftLeans: false , rightLeans: false });
 
   // Smooth accordion animation refs per section
   const contentRefs = useRef({}); // animated wrapper

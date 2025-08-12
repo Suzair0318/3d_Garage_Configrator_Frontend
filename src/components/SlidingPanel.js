@@ -25,7 +25,10 @@ const SlidingPanel = ({ activeMenuItem, isVisible, onClose, setActiveIndex, setA
           setActivePanelItem={setActivePanelItem}
         />;
       case 'size':
-        return <SizePanel />;
+        return <SizePanel
+          setActiveIndex={setActiveIndex}
+          setActivePanelItem={setActivePanelItem}
+           />;
       case 'colors':
         return <ColorsPanel />;
       case 'lean':

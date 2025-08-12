@@ -1,6 +1,12 @@
 import React, { useState } from 'react';
+import useStore from '../../store/useStore';
 
-const SizePanel = () => {
+const SizePanel = (
+  {
+    setActiveIndex,
+    setActivePanelItem
+  }
+) => {
   const [width, setWidth] = useState('16');
   const [length, setLength] = useState('40');
   const [height, setHeight] = useState('10');
@@ -8,10 +14,19 @@ const SizePanel = () => {
   const [roofPitch, setRoofPitch] = useState('3/12');
   const [gauge, setGauge] = useState('12');
 
+  // Read selected building from global store
+  const selectedBuilding = useStore(state => state.selectedBuilding);
+  const setSelectedBuilding = useStore(state => state.setSelectedBuilding);
+
   const widthOptions = ['12', '14', '16', '18', '20', '22', '24', '26', '28', '30'];
   const lengthOptions = ['20', '25', '30', '35', '40', '45', '50', '55', '60'];
   const heightOptions = ['8', '9', '10', '11', '12', '13', '14', '15', '16'];
   const roofStyleOptions = ['Vertical', 'Horizontal', 'A-Frame'];
+    
+  const handle_open_size_panel = () => {
+    setActiveIndex(0);
+    setActivePanelItem({ id: 'building'});
+  };
 
   return (
     <div className="h-full overflow-y-auto">
@@ -31,20 +46,23 @@ const SizePanel = () => {
             </div>
             <div className="flex flex-col items-center">
               <div className="mb-3 w-full flex justify-center">
-                <img 
-                  src="/images/carport.png" 
-                  alt="Standard Carport" 
+                {/* If you have real images per type, swap based on selectedBuilding.id */}
+                <img
+                  src={ selectedBuilding ? selectedBuilding.image : '/images/carport.png'}
+                  alt={selectedBuilding.name}
                   className="h-24 object-contain"
-                  onError={(e) => {
-                    e.target.onerror = null;
-                    e.target.src = 'https://via.placeholder.com/150x100?text=Carport';
-                  }}
                 />
               </div>
-              <h4 className="font-semibold text-[#07223D] text-sm uppercase mb-2 text-center">STANDARD CARPORTS</h4>
-              <button className="bg-[#07223D] text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-700 transition-colors w-full">
+              <h4 className="font-semibold text-[#07223D] text-sm uppercase mb-2 text-center">
+                {selectedBuilding.name}
+              </h4>
+              <button
+                className="bg-[#07223D] text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-700 transition-colors w-full"
+                onClick={() => handle_open_size_panel()}
+              >
                 Change Building
               </button>
+             
             </div>
           </div>
         </div>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import useStore from '../../store/useStore';
 
 
 const BuildingTypePanel = (
@@ -14,6 +15,7 @@ const BuildingTypePanel = (
 
   
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const setSelectedBuilding = useStore(state => state.setSelectedBuilding);
   
   // Refs to measure dynamic content heights for smooth accordion animation
   const contentRefs = useRef({}); // animated wrapper
@@ -205,8 +207,14 @@ const BuildingTypePanel = (
     setExpandedCategory(expandedCategory === categoryId ? null : categoryId);
   };
 
-  const selectItem = (item) => {
+  const selectItem = (item, category) => {
     setSelectedItem(item);
+    // Persist selection to global store for SizePanel consumption
+    setSelectedBuilding({
+      ...item,
+      categoryId: category?.id,
+      categoryName: category?.name,
+    });
   };
 
   const handle_open_size_panel = () => {
@@ -315,7 +323,7 @@ const BuildingTypePanel = (
                           }
                           ${item.featured ? 'ring-2 ring-red-200 bg-gradient-to-br from-red-50 to-orange-50' : ''}
                         `}
-                        onClick={() => selectItem(item)}
+                        onClick={() => selectItem(item, category)}
                         style={{ animationDelay: `${itemIndex * 100}ms` }}
                       >
                         {/* Selection Indicator */}
@@ -341,8 +349,16 @@ const BuildingTypePanel = (
                         {/* Card Content */}
                         <div className="p-3">
                           {/* Large Image/Icon */}
-                          <div className="w-full h-28 rounded-lg flex items-center justify-center text-4xl mb-3">
-                            {item.image}
+                          <div className="w-full h-28 rounded-lg flex items-center justify-center mb-3">
+                            <img
+                              src={item.image}
+                              alt={item.name}
+                              className="h-full object-contain"
+                              // onError={(e) => {
+                              //   e.target.onerror = null;
+                              //   e.target.src = 'https://via.placeholder.com/200x100?text=Building';
+                              // }}
+                            />
                           </div>
 
                           {/* Item Details */}

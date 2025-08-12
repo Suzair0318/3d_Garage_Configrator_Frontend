@@ -6,6 +6,10 @@ const useStore = create((set) => ({
   rightLeanEnabled: false,
   setLeftLeanEnabled: (enabled) => set({ leftLeanEnabled: enabled }),
   setRightLeanEnabled: (enabled) => set({ rightLeanEnabled: enabled }),
+
+  // Selected building from BuildingTypePanel to be shown in SizePanel
+  selectedBuilding: null,
+  setSelectedBuilding: (building) => set({ selectedBuilding: building }),
 }));
 
 export default useStore;

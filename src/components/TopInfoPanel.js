@@ -51,7 +51,7 @@ export default function TopInfoPanel() {
   ];
 
   return (
-    <div className="hidden sm:block fixed top-1 lg:top-1 left-1/2 -translate-x-1/2 z-30 animate-in slide-in-from-top-5 duration-500">
+    <div className="hidden sm:block fixed top-1 lg:top-4 left-1/2 -translate-x-1/2 z-30 animate-in slide-in-from-top-5 duration-500">
       {/* Main Panel */}
       <div className="bg-gradient-to-br from-white via-gray-50 to-white backdrop-blur-xl rounded-xl lg:rounded-2xl shadow-2xl border border-gray-200/50 ring-1 ring-black/5">
         {/* Content Container */}

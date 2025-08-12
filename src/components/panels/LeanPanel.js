@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
+import useStore from '../../store/useStore';
 
 const LeanPanel = () => {
-  const [leftEnabled, setLeftEnabled] = useState(false);
-  const [rightEnabled, setRightEnabled] = useState(false);
+  const leftEnabled = useStore(state => state.leftLeanEnabled);
+  const setLeftEnabled = useStore(state => state.setLeftLeanEnabled);
+  const rightEnabled = useStore(state => state.rightLeanEnabled);
+  const setRightEnabled = useStore(state => state.setRightLeanEnabled);
   const [leftConfig, setLeftConfig] = useState({
     width: '8',
     length: '10',

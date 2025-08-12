@@ -6,23 +6,23 @@ import ColorsPanel from './panels/ColorsPanel';
 import DefaultPanel from './panels/DefaultPanel';
 import LeanPanel from './panels/LeanPanel';
 import SidePanel from './panels/SidePanel';
-
-const SlidingPanel = ({ activeMenuItem, isVisible, onClose , setActiveIndex , setActivePanelItem }) => {
-  const [expandedCategory, setExpandedCategory] = useState(null); 
-  const [selectedItem , setSelectedItem] = useState(null);
+import DoorsWindowsPanel from './panels/DoorsWindowsPanel';
+const SlidingPanel = ({ activeMenuItem, isVisible, onClose, setActiveIndex, setActivePanelItem }) => {
+  const [expandedCategory, setExpandedCategory] = useState(null);
+  const [selectedItem, setSelectedItem] = useState(null);
 
   const renderPanelContent = () => {
     if (!activeMenuItem) return null;
 
     switch (activeMenuItem.id) {
       case 'building':
-        return <BuildingTypePanel 
-        expandedCategory={expandedCategory}
-        setExpandedCategory={setExpandedCategory}
-        selectedItem={selectedItem}
-        setSelectedItem={setSelectedItem}
-        setActiveIndex={setActiveIndex}
-        setActivePanelItem={setActivePanelItem}
+        return <BuildingTypePanel
+          expandedCategory={expandedCategory}
+          setExpandedCategory={setExpandedCategory}
+          selectedItem={selectedItem}
+          setSelectedItem={setSelectedItem}
+          setActiveIndex={setActiveIndex}
+          setActivePanelItem={setActivePanelItem}
         />;
       case 'size':
         return <SizePanel />;
@@ -33,7 +33,7 @@ const SlidingPanel = ({ activeMenuItem, isVisible, onClose , setActiveIndex , se
       case 'sides':
         return <SidePanel />;
       case 'doors':
-        return <DefaultPanel title="Doors & Windows" description="Select and position doors, windows, and other openings." />;
+        return <DoorsWindowsPanel />;
       case 'options':
         return <DefaultPanel title="Additional Options" description="Explore extra features and customization options." />;
       case 'summary':
@@ -92,19 +92,23 @@ const SlidingPanel = ({ activeMenuItem, isVisible, onClose , setActiveIndex , se
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
-            {/* Panel Header */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.1, duration: 0.3 }}
-              className="flex items-center justify-center p-4 border-gray-100"
-            >
-              <div className="flex items-center justify-center w-full">
-                <h2 className="text-lg text-center font-semibold text-[#FF1717]">
-                  {activeMenuItem?.label}
-                </h2>
-              </div>
-            </motion.div>
+
+            {
+              activeMenuItem.id !== 'size' && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.1, duration: 0.3 }}
+                  className="flex items-center justify-center p-4 border-gray-100"
+                >
+                  <div className="flex items-center justify-center w-full">
+                    <h2 className="text-lg text-center font-semibold text-[#FF1717]">
+                      {activeMenuItem?.label}
+                    </h2>
+                  </div>
+                </motion.div>
+              )
+            }
 
             {/* Panel Content */}
             <motion.div

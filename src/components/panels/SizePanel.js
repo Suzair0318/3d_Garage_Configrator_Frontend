@@ -16,23 +16,33 @@ const SizePanel = () => {
   return (
     <div className="h-full overflow-y-auto">
       <div className="p-4 space-y-6">
-        {/* Selected Building Section */}
-        <div className="bg-white border border-gray-200 rounded-lg p-4">
-          <h3 className="text-[#FF1717] font-semibold mb-3 text-center">
+      <h3 className="text-[#FF1717] font-semibold mb-3 text-center">
             Selected Building
           </h3>
-          <div className="relative bg-gray-50 rounded-lg p-6 mb-4">
+        {/* Selected Building Section */}
+        <div className="border border-red-200 rounded-lg p-4 mx-8">
+          <div className="relative bg-white rounded-lg p-4">
             <div className="absolute top-2 right-2">
-              <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
-                <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+              <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+                <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                 </svg>
               </div>
             </div>
-            <div className="text-center">
-              <div className="text-6xl mb-2">🏗️</div>
-              <h4 className="font-semibold text-[#07223D] mb-2">STANDARD CARPORTS</h4>
-              <button className="bg-[#07223D] text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-700 transition-colors">
+            <div className="flex flex-col items-center">
+              <div className="mb-3 w-full flex justify-center">
+                <img 
+                  src="/images/carport.png" 
+                  alt="Standard Carport" 
+                  className="h-24 object-contain"
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = 'https://via.placeholder.com/150x100?text=Carport';
+                  }}
+                />
+              </div>
+              <h4 className="font-semibold text-[#07223D] text-sm uppercase mb-2 text-center">STANDARD CARPORTS</h4>
+              <button className="bg-[#07223D] text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-700 transition-colors w-full">
                 Change Building
               </button>
             </div>

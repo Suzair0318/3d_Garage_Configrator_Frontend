@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useConfigurator } from '../../context/ConfiguratorContext';
+
 
 const BuildingTypePanel = (
   {
@@ -238,7 +238,7 @@ const BuildingTypePanel = (
               key={category.id}
               className={`
                 rounded-lg border transition-all duration-200 overflow-hidden bg-transparent
-                ${(isExpanded || hasSelectedChild)
+                ${(isExpanded )
                   ? 'border-[#FF1717]'
                   : 'border-[#07223D]'
                 }
@@ -252,12 +252,12 @@ const BuildingTypePanel = (
               >
                 <div className="flex items-center space-x-2">
                   <span className={`
-                    font-semibold text-lg
+                    font-semibold text-sm
                     ${(isExpanded || hasSelectedChild) ? 'text-[#FF1717]' : 'text-[#07223D]'}
                   `}>
                     {category.name}
                   </span>
-                  {(isExpanded || hasSelectedChild) && (
+                  {( hasSelectedChild) && (
                     <span className="border border-[#FF1717] text-[#FF1717] text-xs px-1.5 py-0.5 rounded-[4px] font-medium">
                       selected
                     </span>

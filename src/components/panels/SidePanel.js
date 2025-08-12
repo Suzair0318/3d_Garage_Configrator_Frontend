@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import useStore from '../../store/useStore';
 
 const wallOptions = {
   front: ['Open', 'Closed', 'Partial'],
@@ -116,13 +117,49 @@ const accordionConfig = [
       }
     ],
   },
+  {
+    key: 'rightLeans',
+    label: 'Right Leans',
+    fields: [
+      {
+        type: 'radio',
+        name: 'leanType',
+        label: 'Lean Type',
+        options: [
+          { value: 'single', label: 'Single Lean' },
+          { value: 'double', label: 'Double Lean' },
+        ],
+      },
+      {
+        type: 'select',
+        name: 'leanWidth',
+        label: 'Front Wall',
+        options: leanOptions.width.map(v => ({ value: v, label: v })),
+      },
+      {
+        type: 'select',
+        name: 'leanLength',
+        label: 'Back Wall',
+        options: leanOptions.alignment.map(v => ({ value: v, label: v })),
+      },
+      {
+        type: 'select',
+        name: 'leanHeight',
+        label: 'Side Wall',
+        options: leanOptions.alignment.map(v => ({ value: v, label: v })),
+      }
+    ],
+  },
 ];
 
 const SidePanel = () => {
+  // Zustand toggles for lean accordions
+  const leftLeanEnabled = useStore(state => state.leftLeanEnabled);
+  const rightLeanEnabled = useStore(state => state.rightLeanEnabled);
   // Field state
   const [fields, setFields] = useState(initialFieldState);
   // Accordion expanded state
-  const [expanded, setExpanded] = useState({ centerBuilding: true, leftLeans: false });
+  const [expanded, setExpanded] = useState({ centerBuilding: true, leftLeans: false , rightLeans: false });
 
   // Smooth accordion animation refs per section
   const contentRefs = useRef({}); // animated wrapper
@@ -178,13 +215,33 @@ const SidePanel = () => {
 
   // Toggle accordion
   const handleAccordion = (key) => {
-    setExpanded((prev) => ({ ...prev, [key]: !prev[key] }));
+    // Mutually exclusive accordions (including leans if enabled)
+    setExpanded((prev) => {
+      const newState = {};
+      Object.keys(prev).forEach(k => {
+        if (k === key) {
+          newState[k] = !prev[k];
+        } else {
+          newState[k] = false;
+        }
+      });
+      return newState;
+    });
   };
+
+  // Only show leans accordions if enabled
+  useEffect(() => {
+    setExpanded(prev => ({
+      ...prev,
+      leftLeans: leftLeanEnabled ? prev.leftLeans : false,
+      rightLeans: rightLeanEnabled ? prev.rightLeans : false
+    }));
+  }, [leftLeanEnabled, rightLeanEnabled]);
 
   // Handle field changes
   const handleFieldChange = (name, value, type) => {
     setFields((prev) => ({ ...prev, [name]: type === 'checkbox' ? !prev[name] : value }));
-  };[]
+  };
 
   return (
     <div className="h-full overflow-y-auto">
@@ -209,7 +266,13 @@ const SidePanel = () => {
         </div>
 
         {/* Dynamic Accordions */}
-        {accordionConfig.map(acc => (
+        {accordionConfig
+          .filter(acc => {
+            if (acc.key === 'leftLeans') return leftLeanEnabled;
+            if (acc.key === 'rightLeans') return rightLeanEnabled;
+            return true;
+          })
+          .map(acc => (
           <div
             className={`
               rounded-lg border transition-all duration-200 overflow-hidden bg-transparent
@@ -222,7 +285,7 @@ const SidePanel = () => {
               onClick={() => handleAccordion(acc.key)}
             >
               <span
-                className={`font-semibold text-lg ${expanded[acc.key] ? 'text-[#FF1717]' : 'text-[#07223D]'}`}
+                className={`font-semibold text-sm ${expanded[acc.key] ? 'text-[#FF1717]' : 'text-[#07223D]'}`}
               >
                 {acc.label}
               </span>

@@ -79,15 +79,23 @@ const BuildingTypePanel = (
           width: '12-24',
           length: '20-100',
           height: '8-12',
-          image: '🏗️'
+          image: '/stanadard_carpot.png'
         },
         {
-          id: 'enclosed-carport',
-          name: 'Enclosed Carport',
+          id: 'triple_wide_carpot',
+          name: 'Triple Wide Carpot',
           width: '12-30',
           length: '20-100',
           height: '8-14',
-          image: '🏢'
+          image: '/triple_wide_carpot.png'
+        },
+        {
+          id: 'utility_carport',
+          name: 'Utility Carport',
+          width: '12-30',
+          length: '20-100',
+          height: '8-14',
+          image: '/utility_carpot.png'
         }
       ]
     },
@@ -96,28 +104,28 @@ const BuildingTypePanel = (
       name: 'Garages',
       items: [
         {
-          id: 'single-garage',
-          name: 'Single Car Garage',
+          id: 'standard_garage',
+          name: 'Standard Garage',
           width: '12-16',
           length: '20-24',
           height: '8-12',
-          image: '🏠'
+          image: '/standard_garage.png'
         },
         {
-          id: 'double-garage',
-          name: 'Double Car Garage',
+          id: 'garage_with_lean_to',
+          name: 'Garage with Lean To',
           width: '20-24',
           length: '20-30',
           height: '8-14',
-          image: '🏘️'
+          image: '/garage_with_lean.png'
         },
         {
-          id: 'workshop-garage',
-          name: 'Workshop Garage',
+          id: 'triple_wide_garage',
+          name: 'Triple Wide Garage',
           width: '24-30',
           length: '30-40',
           height: '10-16',
-          image: '🔧'
+          image: '/triple_wide_garage.png'
         }
       ]
     },
@@ -126,20 +134,20 @@ const BuildingTypePanel = (
       name: 'Barns',
       items: [
         {
-          id: 'equipment-barn',
-          name: 'Equipment Barn',
+          id: 'standard_barns',
+          name: 'Standard Barns',
           width: '30-40',
           length: '40-60',
           height: '12-20',
-          image: '🚜'
+          image: '/standard_barns.png'
         },
         {
-          id: 'storage-barn',
-          name: 'Storage Barn',
+          id: 'raised_center_barns',
+          name: 'Raised Center Barns',
           width: '20-30',
           length: '30-50',
           height: '10-16',
-          image: '📦'
+          image: '/raised_center_barns.png'
         }
       ]
     },
@@ -148,12 +156,12 @@ const BuildingTypePanel = (
       name: 'RV Covers',
       items: [
         {
-          id: 'rv-cover-standard',
+          id: 'rv-cover',
           name: 'RV Cover',
           width: '12-24',
           length: '20-100',
           height: '10-16',
-          image: '🚐',
+          image: '/rv_cover.png',
         }
       ]
     },
@@ -162,20 +170,20 @@ const BuildingTypePanel = (
       name: 'Commercials',
       items: [
         {
-          id: 'warehouse',
-          name: 'Warehouse',
+          id: 'commercial_carpot',
+          name: 'Commercial Carpot',
           width: '40-100',
           length: '60-200',
           height: '16-30',
-          image: '🏭'
+          image: '/commercial_carpot.png'
         },
         {
-          id: 'retail-building',
-          name: 'Retail Building',
+          id: 'commercial_building',
+          name: 'Commercial Building',
           width: '30-60',
           length: '40-100',
           height: '12-20',
-          image: '🏪'
+          image: '/commercial_building.png'
         }
       ]
     },
@@ -184,20 +192,20 @@ const BuildingTypePanel = (
       name: 'Free Standings',
       items: [
         {
-          id: 'pavilion',
-          name: 'Pavilion',
+          id: 'free_standing_building',
+          name: 'Free Standing Building',
           width: '20-40',
           length: '20-60',
           height: '10-16',
-          image: '🏛️'
+          image: '/free_standard_building.png'
         },
         {
-          id: 'gazebo',
-          name: 'Gazebo',
+          id: 'free_standing_lean_to',
+          name: 'Free Standing Lean To',
           width: '12-20',
           length: '12-20',
           height: '8-12',
-          image: '🏯'
+          image: '/free_strandard_lean.png'
         }
       ]
     }

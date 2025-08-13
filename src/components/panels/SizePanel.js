@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useId } from 'react';
 import useStore from '../../store/useStore';
 
 const SizePanel = (
@@ -7,6 +7,8 @@ const SizePanel = (
     setActivePanelItem
   }
 ) => {
+  const roofPitchName = useId();
+  const gaugeName = useId();
   const [width, setWidth] = useState('16');
   const [length, setLength] = useState('40');
   const [height, setHeight] = useState('10');
@@ -18,22 +20,55 @@ const SizePanel = (
   const selectedBuilding = useStore(state => state.selectedBuilding);
   const setSelectedBuilding = useStore(state => state.setSelectedBuilding);
 
-  const widthOptions = ['12', '14', '16', '18', '20', '22', '24', '26', '28', '30'];
-  const lengthOptions = ['20', '25', '30', '35', '40', '45', '50', '55', '60'];
-  const heightOptions = ['8', '9', '10', '11', '12', '13', '14', '15', '16'];
-  const roofStyleOptions = ['Vertical', 'Horizontal', 'A-Frame'];
-    
+  // Generic value and setter maps for config-driven rendering
+  const values = { width, length, height, roofStyle, roofPitch, gauge };
+  const setters = { width: setWidth, length: setLength, height: setHeight, roofStyle: setRoofStyle, roofPitch: setRoofPitch, gauge: setGauge };
+
+  // Config similar to SidePanel's accordionConfig to map UI infinitely from data
+  const panelConfig = [
+    {
+      key: 'size',
+      title: 'Building Size',
+      fields: [
+        { type: 'select', label: 'Width', options: ['12', '14', '16', '18', '20', '22', '24', '26', '28', '30'] },
+        { type: 'select', label: 'Length', options: ['20', '25', '30', '35', '40', '45', '50', '55', '60'] },
+        { type: 'select', label: 'Height', options: ['8', '9', '10', '11', '12', '13', '14', '15', '16'] },
+      ],
+    },
+    {
+      key: 'roofStyle',
+      title: 'Roof Style',
+      fields: [
+        { type: 'select', label: 'Style', options: ['Vertical', 'Horizontal', 'A-Frame'] },
+      ],
+    },
+    {
+      key: 'roofPitch',
+      title: 'Roof Pitch',
+      fields: [
+        { type: 'radio', options: ['3/12', '4/12'] },
+      ],
+    },
+    {
+      key: 'gauge',
+      title: 'Gauge',
+      fields: [
+        { type: 'radio', options: ['12', '14'] },
+      ],
+    },
+  ];
+
   const handle_open_size_panel = () => {
     setActiveIndex(0);
-    setActivePanelItem({ id: 'building'});
+    setActivePanelItem({ id: 'building' });
   };
 
   return (
     <div className="h-full overflow-y-auto">
       <div className="p-4 space-y-6">
-      <h3 className="text-[#FF1717] font-semibold mb-3 text-center">
-            Selected Building
-          </h3>
+        <h3 className="text-[#FF1717] font-semibold mb-3 text-center">
+          Selected Building
+        </h3>
         {/* Selected Building Section */}
         <div className="border border-red-200 rounded-lg p-4 mx-8">
           <div className="relative bg-white rounded-lg p-4">
@@ -48,13 +83,13 @@ const SizePanel = (
               <div className="mb-3 w-full flex justify-center">
                 {/* If you have real images per type, swap based on selectedBuilding.id */}
                 <img
-                  src={ selectedBuilding ? selectedBuilding.image : '/images/carport.png'}
-                  alt={selectedBuilding.name}
+                  src={selectedBuilding ? selectedBuilding?.image : '/images/carport.png'}
+                  alt={selectedBuilding?.name}
                   className="h-24 object-contain"
                 />
               </div>
               <h4 className="font-semibold text-[#07223D] text-sm uppercase mb-2 text-center">
-                {selectedBuilding.name}
+                {selectedBuilding?.name}
               </h4>
               <button
                 className="bg-[#07223D] text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-700 transition-colors w-full"
@@ -62,134 +97,67 @@ const SizePanel = (
               >
                 Change Building
               </button>
-             
-            </div>
-          </div>
-        </div>
-     
-        {/* Building Size Section */}
-        <div>
-          <h3 className="font-semibold text-lg text-gray-800 mb-4">Building Size</h3>
-          
-          <div className="space-y-4">
-            {/* Width */}
-            <div>
-              <label className="block text-sm font-semibold tracking-wide text-[#07223D] mb-2">Width</label>
-              <select 
-                value={width} 
-                onChange={(e) => setWidth(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-[#FF1717] focus:ring-2 focus:ring-red-100 bg-white"
-              >
-                {widthOptions.map(option => (
-                  <option key={option} value={option}>{option}</option>
-                ))}
-              </select>
-            </div>
 
-            {/* Length */}
-            <div>
-              <label className="block text-sm font-semibold tracking-wide text-[#07223D] mb-2">Length</label>
-              <select 
-                value={length} 
-                onChange={(e) => setLength(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-[#FF1717] focus:ring-2 focus:ring-red-100 bg-white"
-              >
-                {lengthOptions.map(option => (
-                  <option key={option} value={option}>{option}</option>
-                ))}
-              </select>
-            </div>
-
-            {/* Height */}
-            <div>
-              <label className="block text-sm font-semibold tracking-wide text-[#07223D] mb-2">Height</label>
-              <select 
-                value={height} 
-                onChange={(e) => setHeight(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-[#FF1717] focus:ring-2 focus:ring-red-100 bg-white"
-              >
-                {heightOptions.map(option => (
-                  <option key={option} value={option}>{option}</option>
-                ))}
-              </select>
             </div>
           </div>
         </div>
 
-        {/* Roof Style Section */}
-        <div>
-          <h3 className="font-semibold text-lg text-gray-800 mb-4">Roof Style</h3>
-          <div>
-            <label className="block text-sm font-semibold tracking-wide text-[#07223D] mb-2">Style</label>
-            <select 
-              value={roofStyle} 
-              onChange={(e) => setRoofStyle(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-[#FF1717] focus:ring-2 focus:ring-red-100 bg-white"
-            >
-              {roofStyleOptions.map(option => (
-                <option key={option} value={option}>{option}</option>
-              ))}
-            </select>
-          </div>
-        </div>
+        {/* Config-driven sections */}
+        {panelConfig.map(section => (
+          <div key={section.key}>
+            <h3 className={`font-semibold text-lg mb-4 ${section.key === 'gauge' ? 'text-[#07223D]' : 'text-gray-800'}`}>
+              {section.title}
+            </h3>
+            <div className={section.key === 'roofPitch' || section.key === 'gauge' ? 'space-y-2' : 'space-y-4'}>
+              {section.fields.map((field) => {
+                // derive state key based on section and label if not explicitly provided
+                const labelToKey = { Width: 'width', Length: 'length', Height: 'height', Style: 'roofStyle' };
+                const derivedKey = labelToKey[field.label] ||
+                  (section.key === 'roofPitch' ? 'roofPitch' : section.key === 'gauge' ? 'gauge' : section.key === 'roofStyle' ? 'roofStyle' : undefined);
 
-        {/* Roof Pitch Section */}
-        <div>
-          <h3 className="font-semibold text-lg text-gray-800 mb-4">Roof Pitch</h3>
-          <div className="space-y-2">
-            <label className="flex items-center">
-              <input
-                type="radio"
-                name="roofPitch"
-                value="3/12"
-                checked={roofPitch === '3/12'}
-                onChange={(e) => setRoofPitch(e.target.value)}
-                className="w-4 h-4 text-[#FF1717] border-gray-300 focus:ring-[#FF1717]"
-              />
-              <span className="ml-2 text-sm font-semibold tracking-wide text-[#07223D]">3/12 (Standard)</span>
-            </label>
-            <label className="flex items-center">
-              <input
-                type="radio"  
-                name="roofPitch"
-                value="4/12"
-                checked={roofPitch === '4/12'}
-                onChange={(e) => setRoofPitch(e.target.value)}
-                className="w-4 h-4 text-[#FF1717] border-gray-300 focus:ring-[#FF1717]"
-              />
-              <span className="ml-2 text-sm font-semibold tracking-wide text-[#07223D]">4/12</span>
-            </label>
+                if (field.type === 'select') {
+                  const stateKey = derivedKey;
+                  return (
+                    <div key={stateKey || field.label}>
+                      <label className="block text-sm font-semibold tracking-wide text-[#07223D] mb-2">{field.label}</label>
+                      <select
+                        value={values[stateKey]}
+                        onChange={(e) => setters[stateKey](e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-[#FF1717] focus:ring-2 focus:ring-red-100 bg-white"
+                      >
+                        {field.options?.map((option) => (
+                          <option key={option} value={option}>{option}</option>
+                        ))}
+                      </select>
+                    </div>
+                  );
+                }
+                if (field.type === 'radio') {
+                  const stateKey = derivedKey;
+                  const groupName = field.name || (section.key === 'roofPitch' ? `roofPitch-${roofPitchName}` : section.key === 'gauge' ? `gauge-${gaugeName}` : undefined);
+                  return field.options?.map((option) => (
+                    <label key={option} className="flex items-center">
+                      <input
+                        type="radio"
+                        name={groupName}
+                        value={option}
+                        checked={values[stateKey] === option}
+                        onChange={(e) => setters[stateKey](e.target.value)}
+                        className="w-4 h-4 text-[#FF1717] border-gray-300 focus:ring-[#FF1717]"
+                      />
+                      <span className="ml-2 text-sm font-semibold tracking-wide text-[#07223D]">
+                        {option}
+                        {section.key === 'gauge' ? ' Gauge' : ''}
+                        {section.key === 'roofPitch' && option === '3/12' ? ' (Standard)' : ''}
+                      </span>
+                    </label>
+                  ));
+                }
+                return null;
+              })}
+            </div>
           </div>
-        </div>
-
-        {/* Gauge Section */}
-        <div>
-          <h3 className="font-semibold text-lg text-[#07223D] mb-4">Gauge</h3>
-          <div className="space-y-2">
-            <label className="flex items-center">
-              <input
-                type="radio"
-                name="gauge"
-                value="12"
-                checked={gauge === '12'}
-                onChange={(e) => setGauge(e.target.value)}
-                className="w-4 h-4 text-[#FF1717] border-gray-300 focus:ring-[#FF1717]"
-              />
-              <span className="ml-2 text-sm font-semibold tracking-wide text-[#07223D]">12 Gauge</span>
-            </label>
-            <label className="flex items-center">
-              <input
-                type="radio"
-                name="gauge"
-                value="14"
-                checked={gauge === '14'}
-                onChange={(e) => setGauge(e.target.value)}
-                className="w-4 h-4 text-[#FF1717] border-gray-300 focus:ring-[#FF1717]"
-              />
-              <span className="ml-2 text-sm font-semibold tracking-wide text-[#07223D]">14 Gauge</span>
-            </label>
-          </div>
-        </div>
+        ))}
       </div>
     </div>
   );

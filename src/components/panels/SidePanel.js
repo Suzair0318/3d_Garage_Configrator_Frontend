@@ -53,6 +53,7 @@ const accordionConfig = [
         name: 'frontWall',
         label: 'Front Wall',
         options: wallOptions.front.map(v => ({ value: v, label: v })),
+        
       },
       {
         type: 'select',

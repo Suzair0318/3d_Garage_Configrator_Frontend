@@ -93,52 +93,12 @@ const DoorsWindowsPanel = () => {
       name: 'Doors',
       items: [
         {
-          id: 'main-door',
-          name: 'Main Door',
+          id: 'roll-up',
+          name: 'Roll-Up',
           image: (
-            <svg viewBox="0 0 50 60" className="w-full h-full stroke-[#07223D] stroke-2 fill-none">
-              <rect x="10" y="5" width="30" height="50" rx="1" />
-              <line x1="15" y1="5" x2="15" y2="55" />
-              <line x1="35" y1="5" x2="35" y2="55" />
-            </svg>
-          )
-        },
-        {
-          id: 'heavy-duty',
-          name: 'Heavy Duty',
-          image: (
-            <svg viewBox="0 0 50 60" className="w-full h-full stroke-[#07223D] stroke-2 fill-none">
-              <rect x="10" y="5" width="30" height="50" rx="1" />
-              <line x1="15" y1="5" x2="15" y2="55" />
-              <line x1="35" y1="5" x2="35" y2="55" />
-              <line x1="20" y1="30" x2="30" y2="30" />
-            </svg>
-          )
-        },
-        {
-          id: 'diamond-door',
-          name: 'Diamond Door',
-          image: (
-            <svg viewBox="0 0 50 60" className="w-full h-full stroke-[#07223D] stroke-2 fill-none">
-              <rect x="10" y="5" width="30" height="50" rx="1" />
-              <line x1="15" y1="5" x2="15" y2="55" />
-              <line x1="35" y1="5" x2="35" y2="55" />
-              <polygon points="25,15 30,25 25,35 20,25" />
-            </svg>
-          )
-        },
-        {
-          id: 'cottage',
-          name: 'Cottage',
-          image: (
-            <svg viewBox="0 0 50 60" className="w-full h-full stroke-[#07223D] stroke-2 fill-none">
-              <rect x="10" y="5" width="30" height="50" rx="1" />
-              <line x1="25" y1="5" x2="25" y2="55" />
-              <line x1="10" y1="30" x2="40" y2="30" />
-              <line x1="17.5" y1="17.5" x2="17.5" y2="42.5" />
-              <line x1="32.5" y1="17.5" x2="32.5" y2="42.5" />
-              <line x1="17.5" y1="17.5" x2="32.5" y2="17.5" />
-              <line x1="17.5" y1="42.5" x2="32.5" y2="42.5" />
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-full h-full stroke-[#07223D] stroke-2 fill-none" viewBox="0 0 150 150.1">
+              <path d="M150 146.5v2.1c-1 1.2-2.3 1.5-3.8 1.5H3.2c-2 0-3.1-.9-3.1-2.5 0-1.5 1.1-2.4 3-2.4h4.4v-125H3.2C.9 20 0 19.1 0 16.9c0-4.3.1-8.7 0-13C0 2.3.3 1 1.5 0H150v18.5c-.9 1.3-2.2 1.6-3.7 1.6-1.2-.1-2.4 0-3.7 0v125c1.2 0 2.4.1 3.5 0 1.6-.3 2.9.1 3.9 1.4M137.4 20.1H12.7v124.8h4.8V29.2c0-.6 0-1.3.1-1.9.1-1.2.8-2 2-2.2.6-.1 1.3-.1 1.9-.1h107.2c.5 0 1.1 0 1.6.1 1.3.2 2.2 1 2.3 2.5V145h4.9c-.1-41.7-.1-83.2-.1-124.9M22.6 64.9h104.8V50.1H22.6zm104.8 5.2H22.7v14.8h104.7zm0 20H22.7v14.8h104.7zm0 20.1H22.7v14.7h104.7zM22.6 44.8h104.7V30.1H22.6zm104.8 85.3H22.7v14.8h104.7zm17.5-125H5.1v9.8h139.8z"/>
+              <path d="M75 142.5h-7.4c-1.6-.2-2.5-1.1-2.5-2.5s1-2.4 2.5-2.5c4.9-.1 9.8-.1 14.8 0 1.6 0 2.6 1.1 2.6 2.4 0 1.5-.9 2.5-2.5 2.6-2.6.1-5 0-7.5 0"/>
             </svg>
           )
         }
@@ -149,22 +109,29 @@ const DoorsWindowsPanel = () => {
       name: 'Framed openings',
       items: [
         {
-          id: 'standard-frame',
-          name: 'Standard Frame',
+          id: 'roll-up-frameout',
+          name: 'Roll-Up Frameout',
           image: (
-            <svg viewBox="0 0 50 60" className="w-full h-full stroke-[#07223D] stroke-2 fill-none">
-              <rect x="10" y="5" width="30" height="50" rx="1" />
-            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-full h-full stroke-[#07223D] stroke-2 fill-none" viewBox="0 0 150 150.1">
+             <path d="M6.7 150H2.1v-2.1c0-46.3 0-92.5.1-138.8 0-1.9.5-4 1.3-5.8C4.4 1.1 6.3 0 9 0c44 .1 88 0 132 0 3.6 0 6.5 2.6 6.8 6.3.1.7 0 1.4 0 2.1v141.5h-4.4V10.1c0-.8.2-1.8-.2-2.5-.5-.9-1.3-1.9-2.1-2.1-1.9-.4-4-.5-5.9-.5H15.8c-2.2 0-4.5.2-6.7.4-1.4.2-2.1 1.1-2.3 2.3-.1.7-.1 1.4-.1 2.1V150"/></svg>
           )
         },
         {
           id: 'reinforced-frame',
-          name: 'Reinforced Frame',
+          name: 'Door Frameout',
           image: (
-            <svg viewBox="0 0 50 60" className="w-full h-full stroke-[#07223D] stroke-2 fill-none">
-              <rect x="10" y="5" width="30" height="50" rx="1" />
-              <line x1="10" y1="15" x2="40" y2="15" />
-              <line x1="10" y1="45" x2="40" y2="45" />
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-full h-full stroke-[#07223D] stroke-2 fill-none" viewBox="0 0 150 150.1">
+              <path d="M122.7 0v150H27.4V0zm-4.5 145.7V4.6H31.9v141.1z"/>
+            <path d="M36.3 8.9h77.5v132.4H36.3zm4.3 127.9h68.7V13.2H40.6z"/>
+            </svg>
+          )
+        },
+        {
+          id: 'windows-frameout',
+          name: 'Windows Frameout',
+          image: (
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-full h-full stroke-[#07223D] stroke-2 fill-none" viewBox="0 0 150 150.1">
+              <path d="M132 150c-23.1-.1-45.7-.1-64.8-.1H18.1c-3 0-3.6-.6-3.6-3.7V3.8c0-2.4.6-3.3 1.7-3.8h117.6c1.1.6 1.7 1.5 1.7 3.8-.1 54.5-.1 99.9 0 142.6 0 1-.3 1.9-1 2.6-.6.7-1.5 1-2.5 1m-52.4-14.5h-44c-1.5 0-2.5.4-3.2 1.1-.9 1-1.7 2-2.6 3.1-.3.4-.6.8-1 1.2l-2.7 3.3h100.7l-3.7-3.5c-.4-.4-.9-.8-1.3-1.2-.9-.9-1.8-1.8-2.8-2.6s-2.3-1.4-3.5-1.4H79.6m-59.5 6.6 3.6-4.4 1.2-1.5c1-1.2 1.9-2.3 2.8-3.5.7-.9 1.1-2.1 1.1-3.1V20.1c0-.6 0-1.8-.8-2.6-1-1.1-2.1-2.2-3.2-3.4l-1.2-1.3-3.5-3.7zM126.4 13.4l-1.3 1.3c-1.1 1.1-2 2.1-3 3.1-.8.8-1 2-1 2.8v108.6c0 .6 0 1.7.8 2.6 1 1.2 2.1 2.4 3.3 3.7l1.2 1.3 3.6 3.9V9.7zM34.5 129.9h81V53.7h-81zm0-81.9h81V20h-81zm40-33.6c14.3 0 26 0 36.7.1h.3c3.5 0 8-.6 11-5.5l2.1-3.5H23.7L27.4 9c.5.4.9.8 1.3 1.2.9.8 1.7 1.6 2.4 2.3 1.1 1.2 2.4 1.7 4.1 1.7h14.6c8.2.2 16.5.2 24.7.2"/>
             </svg>
           )
         }
@@ -175,24 +142,42 @@ const DoorsWindowsPanel = () => {
       name: 'Walk-in Doors',
       items: [
         {
-          id: 'standard-walk-in',
-          name: 'Standard Walk-in',
+          id: 'main-door',
+          name: 'Main Door',
           image: (
-            <svg viewBox="0 0 50 60" className="w-full h-full stroke-[#07223D] stroke-2 fill-none">
-              <rect x="15" y="5" width="20" height="50" rx="1" />
-              <circle cx="32" cy="30" r="2" fill="#07223D" />
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-full h-full stroke-[#07223D] stroke-2 fill-none" viewBox="0 0 150 150.1">
+              <path d="M124.1 145h10.3v5h-119v-5h10.2V0H124c.1 48.2.1 96.5.1 145m-18.1-.1V18.2H44v126.7zm5.3-132v131.9h7.7V5.2H31.1v139.6h7.8V12.9z"/>
+              <path d="M55.7 95.7c-3.6 0-6.5-2.8-6.6-6.3 0-3.7 2.8-6.6 6.5-6.6 3.6 0 6.5 2.8 6.5 6.4s-2.9 6.5-6.4 6.5m0-4.7c.5-.8 1.1-1.4 1.1-1.8-.1-.5-.8-.8-1.2-1.2-.4.5-1.1.9-1.2 1.4-.1.4.6.9 1.3 1.6"/>
             </svg>
           )
         },
         {
-          id: 'double-walk-in',
-          name: 'Double Walk-in',
+          id: 'heavy-duty',
+          name: 'Heavy Duty',
           image: (
-            <svg viewBox="0 0 50 60" className="w-full h-full stroke-[#07223D] stroke-2 fill-none">
-              <rect x="5" y="5" width="40" height="50" rx="1" />
-              <line x1="25" y1="5" x2="25" y2="55" />
-              <circle cx="22" cy="30" r="2" fill="#07223D" />
-              <circle cx="28" cy="30" r="2" fill="#07223D" />
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-full h-full stroke-[#07223D] stroke-2 fill-none" viewBox="0 0 150 150.1">
+              <path d="M124.1 145h10.3v5h-119v-5h10.2V0H124c.1 48.2.1 96.5.1 145m-18.1-.1V18.2H44v126.7zm5.3-132v131.9h7.7V5.2H31.1v139.6h7.8V12.9z"/>
+              <path d="M55.7 95.7c-3.6 0-6.5-2.8-6.6-6.3 0-3.7 2.8-6.6 6.5-6.6 3.6 0 6.5 2.8 6.5 6.4s-2.9 6.5-6.4 6.5m0-4.7c.5-.8 1.1-1.4 1.1-1.8-.1-.5-.8-.8-1.2-1.2-.4.5-1.1.9-1.2 1.4-.1.4.6.9 1.3 1.6"/>
+            </svg>
+          )
+        },
+        {
+          id: 'diamond-door',
+          name: 'Diamond Door',
+          image: (
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-full h-full stroke-[#07223D] stroke-2 fill-none" viewBox="0 0 150 150.1">
+              <path d="M124.1 145h10.3v5H15.5v-5h10.2V0h98.4zM44 18.1v126.7h62V18.1zm74.9 126.8V5.2H31.1v139.6h7.7V12.9h72.5v131.9c2.6.1 5 .1 7.6.1"/>
+              <path d="M61 40.7c4.8-5.7 9.5-11.4 14.3-17.2 4.7 5.7 9.4 11.3 14 16.9-4.8 5.7-9.6 11.3-14.5 17.2-4.6-5.8-9.3-11.4-13.8-16.9"/>
+            </svg>
+          )
+        },
+        {
+          id: 'cottage',
+          name: 'Cottage',
+          image: (
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-full h-full stroke-[#07223D] stroke-2 fill-none" viewBox="0 0 150 150.1">
+              <path d="M15.5 150v-5h10.3V0h98.3v144.9h10.3v5.1zm90.5-5.1V18.2H44.1v126.7zM31.1 5.2v139.7h7.7V13h72.5v131.9h7.6V5.2z"/>
+              <path d="M98.3 59.3v30.1c0 1.4-.4 1.8-1.8 1.8-14.1-.1-28.3-.1-42.4 0-1.4 0-1.8-.4-1.8-1.8V29.2c0-1.4.4-1.8 1.8-1.8 14.1.1 28.3.1 42.4 0 1.4 0 1.8.4 1.8 1.8zm-24-9.8H54.1v19.2h20.2zm22.3 0H76.4v19.2h20.2zM54.1 70.9v18.6h20.2V70.9zm42.5 18.7V71H76.4v18.6zM54.1 47.4h20.2V29.1H54.1zm22.3-18.3v18.3h20.2V29.1z"/>
             </svg>
           )
         }
@@ -206,29 +191,8 @@ const DoorsWindowsPanel = () => {
           id: 'single-pane',
           name: 'Single Pane',
           image: (
-            <svg viewBox="0 0 50 40" className="w-full h-full stroke-[#07223D] stroke-2 fill-none">
-              <rect x="10" y="5" width="30" height="30" rx="1" />
-            </svg>
-          )
-        },
-        {
-          id: 'double-pane',
-          name: 'Double Pane',
-          image: (
-            <svg viewBox="0 0 50 40" className="w-full h-full stroke-[#07223D] stroke-2 fill-none">
-              <rect x="10" y="5" width="30" height="30" rx="1" />
-              <line x1="25" y1="5" x2="25" y2="35" />
-            </svg>
-          )
-        },
-        {
-          id: 'sliding-window',
-          name: 'Sliding Window',
-          image: (
-            <svg viewBox="0 0 50 40" className="w-full h-full stroke-[#07223D] stroke-2 fill-none">
-              <rect x="10" y="5" width="30" height="30" rx="1" />
-              <line x1="25" y1="5" x2="25" y2="35" />
-              <line x1="10" y1="20" x2="40" y2="20" />
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-full h-full stroke-[#07223D] stroke-2 fill-none" viewBox="0 0 150 150.1">
+              <path d="M17.6 0h114.8c1.3.8 1.5 2 1.5 3.4v131.3l.3.1h8.2c1.9 0 2.7.8 2.7 2.6 0 3.3.1 6.5 0 9.8 0 2.1-.8 2.7-2.9 2.7H7.7c-2.3 0-3-.7-3-3V139c0-4 .4-4.3 4.4-4.3h7.2V3.4c.1-1.2.2-2.5 1.3-3.4m111.6 4.7H21v130h5.7V13c0-2.1.8-2.8 2.8-2.8h91.3c1.9.1 2.6.7 2.7 2.7v121.9h5.7zm-10.3 10.1H77.5v36.8h41.4zm0 41.6H77.5v36.8h41.4zm0 41.6H77.5v36.8h41.4zM31.4 51.5h41.3V14.7H31.4zm0 41.6h41.3V56.4H31.4zm0 41.6h41.3V98H31.4zM9.5 145.4h129.3c.4 0 .9.1 1.3 0 .3-.1.8-.5.8-.8.1-1.7 0-3.4 0-5.1H9.5z"/>
             </svg>
           )
         }
@@ -361,8 +325,10 @@ const DoorsWindowsPanel = () => {
                               {item.name}
                             </p>
                           </div>
-                          <div className="w-16 h-16 mb-2 flex-shrink-0">
-                            {item.image}
+                          <div className="w-16 h-16 mb-2 flex-shrink-0 flex items-center justify-center">
+                            <div className="w-12 h-12 flex items-center justify-center">
+                              {item.image}
+                            </div>
                           </div>
                           <button 
                             className="mt-auto px-4 py-1 border border-[#07223D] rounded-md text-[#07223D] text-sm font-medium hover:bg-[#07223D] hover:text-white transition-colors duration-200 whitespace-nowrap"

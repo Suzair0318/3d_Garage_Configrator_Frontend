@@ -83,7 +83,7 @@ const SlidingPanel = ({ activeMenuItem, isVisible, onClose, setActiveIndex, setA
               onClick={onClose}
               className="absolute -top-3 -right-3 md:top-9 md:-right-10 w-9 h-9 md:w-10 md:h-14
                          rounded-r-lg bg-white hover:bg-[#07223D] hover:text-white
-                         flex items-center justify-center transition-colors duration-200 group
+                         flex items-center justify-center transition-colors duration-200 group cursor-pointer
                          "
             >
               <svg

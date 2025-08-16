@@ -201,16 +201,16 @@ const DoorsWindowsPanel = () => {
   ];
 
   return (
-    <div className="h-full overflow-y-auto p-4">
+    <div className="h-full overflow-y-auto p-3 sm:p-4 lg:p-4">
       {/* Header Section */}
-      <div className="mb-6">
-        <h2 className="text-xl font-bold text-[#07223D] mb-1">
+      <div className="mb-4 sm:mb-6">
+        <h2 className="text-lg sm:text-xl font-bold text-[#07223D] mb-1">
           DOORS & WINDOWS
         </h2>
       </div>
       
       {/* Building Selection Dropdowns */}
-      <div className="space-y-4 mb-6">
+      <div className="space-y-3 sm:space-y-4 mb-4 sm:mb-6">
         {[
           {
             id: 'center-building',
@@ -234,12 +234,12 @@ const DoorsWindowsPanel = () => {
             options: optionsData.rightLeans,
           },
         ].map((group) => (
-          <div className="space-y-2" key={group.id}>
-            <label className="block text-[#07223D] font-semibold">{group.label}</label>
+          <div className="space-y-1 sm:space-y-2" key={group.id}>
+            <label className="block text-[#07223D] font-semibold text-sm sm:text-base">{group.label}</label>
             <select 
               value={group.value}
               onChange={group.onChange}
-              className="w-full p-2 border border-gray-300 rounded-md bg-white text-gray-700 focus:outline-none focus:ring-1 focus:ring-[#07223D]"
+              className="w-full p-1.5 sm:p-2 border border-gray-300 rounded-md bg-white text-gray-700 focus:outline-none focus:ring-1 focus:ring-[#07223D] text-sm sm:text-base"
             >
               <option value="">Select</option>
               {group.options.map((opt) => (
@@ -251,7 +251,7 @@ const DoorsWindowsPanel = () => {
       </div>
       
       {/* Category Accordions */}
-      <div className="space-y-3">
+      <div className="space-y-2 sm:space-y-3">
         {categories.map((category, index) => {
           const isExpanded = expanded === category.id;
           
@@ -266,16 +266,16 @@ const DoorsWindowsPanel = () => {
             >
               {/* Accordion Header */}
               <div
-                className="flex items-center justify-between px-3 py-2 cursor-pointer transition-all duration-150"
+                className="flex items-center justify-between px-2 sm:px-3 py-1.5 sm:py-2 cursor-pointer transition-all duration-150"
                 onClick={() => toggleCategory(category.id)}
               >
-                <span className={`font-semibold text-sm ${isExpanded ? 'text-[#FF1717] ' : 'text-[#07223D] '}`}>
+                <span className={`font-semibold text-xs sm:text-sm ${isExpanded ? 'text-[#FF1717] ' : 'text-[#07223D] '}`}>
                   {category.name}
                 </span>
                 
                 {isExpanded ? (
                   <svg
-                    className="w-4 h-4 text-[#FF1717]"
+                    className="w-3 h-3 sm:w-4 sm:h-4 text-[#FF1717]"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -284,7 +284,7 @@ const DoorsWindowsPanel = () => {
                   </svg>
                 ) : (
                   <svg
-                    className="w-4 h-4 text-[#07223D]"
+                    className="w-3 h-3 sm:w-4 sm:h-4 text-[#07223D]"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -311,27 +311,27 @@ const DoorsWindowsPanel = () => {
               >
                 <div
                   ref={(el) => { if (el) innerContentRefs.current[category.id] = el; }}
-                  className={`p-4 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${isExpanded ? 'translate-y-0' : '-translate-y-4'}`}
+                  className={`p-2 sm:p-3 lg:p-4 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${isExpanded ? 'translate-y-0' : '-translate-y-4'}`}
                 >
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-2 sm:gap-3 lg:gap-4">
                     {category.items.map((item) => {
                       // Calculate if name is long (more than 2 words or 15 chars)
                       const isLongName = item.name.split(' ').length > 2 || item.name.length > 15;
                       
                       return (
                         <div key={item.id} className="flex flex-col items-center h-full">
-                          <div className="w-full text-center mb-1 min-h-[2.5rem] flex items-center justify-center">
-                            <p className={`text-sm font-medium text-[#07223D] ${isLongName ? 'line-clamp-2' : 'whitespace-nowrap'}`}>
+                          <div className="w-full text-center mb-1 min-h-[2rem] sm:min-h-[2.5rem] flex items-center justify-center">
+                            <p className={`text-xs sm:text-sm font-medium text-[#07223D] ${isLongName ? 'line-clamp-2' : 'whitespace-nowrap'}`}>
                               {item.name}
                             </p>
                           </div>
-                          <div className="w-16 h-16 mb-2 flex-shrink-0 flex items-center justify-center">
-                            <div className="w-12 h-12 flex items-center justify-center">
+                          <div className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 mb-1 sm:mb-2 flex-shrink-0 flex items-center justify-center">
+                            <div className="w-10 h-10 sm:w-11 sm:h-11 lg:w-12 lg:h-12 flex items-center justify-center">
                               {item.image}
                             </div>
                           </div>
                           <button 
-                            className="mt-auto px-4 py-1 border border-[#07223D] rounded-md text-[#07223D] text-sm font-medium hover:bg-[#07223D] hover:text-white transition-colors duration-200 whitespace-nowrap"
+                            className="mt-auto px-2 sm:px-3 lg:px-4 py-0.5 sm:py-1 border border-[#07223D] rounded-md text-[#07223D] text-xs sm:text-sm font-medium hover:bg-[#07223D] hover:text-white transition-colors duration-200 whitespace-nowrap"
                             onClick={() => setSelected(item)}
                           >
                             Add

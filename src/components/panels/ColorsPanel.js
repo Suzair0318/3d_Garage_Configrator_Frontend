@@ -36,8 +36,8 @@ const ColorsPanel = () => {
   const ColorSelector = ({ title, colors, selected, onSelect, selectedColorName }) => (
     <div className="mb-8">
       <div className="flex justify-between items-center mb-4">
-        <h4 className="text-lg font-semibold text-[#07223D] tracking-wide">{title}</h4>
-        <span className="text-sm text-[#FF1717] font-semibold bg-[#FF1717]/10 px-3 py-1 rounded-full border border-[#FF1717]/20">{selectedColorName}</span>
+        <h4 className="text-sm sm:text-base lg:text-lg font-semibold text-[#07223D] tracking-wide">{title}</h4>
+        <span className="text-xs sm:text-sm text-[#FF1717] font-semibold bg-[#FF1717]/10 px-2 sm:px-3 py-1 rounded-full border border-[#FF1717]/20">{selectedColorName}</span>
       </div>
       
       <div className="grid grid-cols-7 gap-2">
@@ -49,7 +49,7 @@ const ColorsPanel = () => {
           >
             <div
               className={`
-                w-10 h-10 rounded-lg border-2 transition-all duration-200 hover:scale-110 hover:shadow-xl
+                w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10 rounded-lg border-2 transition-all duration-200 hover:scale-110 hover:shadow-xl
                 ${selected === color.id 
                   ? 'border-[#FF1717] shadow-xl ring-2 ring-[#FF1717]/30' 
                   : 'border-gray-200 hover:border-[#FF1717]/50 shadow-md'
@@ -61,7 +61,7 @@ const ColorsPanel = () => {
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="bg-[#FF1717] rounded-full p-0.5 shadow-lg">
                     <svg 
-                      className="w-4 h-4 text-white" 
+                      className="w-2.5 h-2.5 sm:w-3 sm:h-3 lg:w-4 lg:h-4 text-white" 
                       fill="none" 
                       stroke="currentColor" 
                       strokeWidth="3"
@@ -85,7 +85,7 @@ const ColorsPanel = () => {
 
   return (
     <div className="h-full overflow-y-auto bg-gradient-to-br from-slate-50 to-white">
-      <div className="p-6">
+      <div className="p-4 sm:p-5 lg:p-6">
         <ColorSelector
           title="Roof Color"
           colors={roofColors}
@@ -112,25 +112,25 @@ const ColorsPanel = () => {
 
         {/* Roof Pitch + Wainscot */}
         <div className="mt-8">
-          <h4 className="text-lg font-semibold text-[#07223D] mb-3 tracking-wide">Roof Pitch</h4>
+          <h4 className="text-sm sm:text-base lg:text-lg font-semibold text-[#07223D] mb-3 tracking-wide">Roof Pitch</h4>
           <label className="inline-flex items-center gap-3 select-none cursor-pointer group">
-            <div className={`relative inline-flex h-6 w-11 items-center rounded-full transition-all duration-300 shadow-inner ${addWainscot ? 'bg-gradient-to-r from-[#FF1717] to-[#FF4444]' : 'bg-gray-300'}`}>
+            <div className={`relative inline-flex h-5 w-9 sm:h-6 sm:w-11 items-center rounded-full transition-all duration-300 shadow-inner ${addWainscot ? 'bg-gradient-to-r from-[#FF1717] to-[#FF4444]' : 'bg-gray-300'}`}>
               <input
                 type="checkbox"
                 className="sr-only"
                 checked={addWainscot}
                 onChange={(e) => setAddWainscot(e.target.checked)}
               />
-              <span className={`inline-block h-5 w-5 transform rounded-full bg-white shadow-lg transition-transform duration-300 ${addWainscot ? 'translate-x-5' : 'translate-x-1'}`} />
+              <span className={`inline-block h-4 w-4 sm:h-5 sm:w-5 transform rounded-full bg-white shadow-lg transition-transform duration-300 ${addWainscot ? 'translate-x-4 sm:translate-x-5' : 'translate-x-0.5 sm:translate-x-1'}`} />
             </div>
-            <span className="text-sm text-[#07223D] font-semibold group-hover:text-[#FF1717] transition-colors">Add Wainscot (Full Building)</span>
+            <span className="text-xs sm:text-sm text-[#07223D] font-semibold group-hover:text-[#FF1717] transition-colors">Add Wainscot (Full Building)</span>
           </label>
         </div>
 
         {/* Disclaimer */}
         <div className="mt-8 p-4 bg-white rounded-lg border border-gray-200 shadow-sm">
-          <h4 className="text-lg font-semibold text-[#07223D] mb-3 tracking-wide">Disclaimer</h4>
-          <p className="text-sm leading-6 text-gray-700">
+          <h4 className="text-sm sm:text-base lg:text-lg font-semibold text-[#07223D] mb-3 tracking-wide">Disclaimer</h4>
+          <p className="text-xs sm:text-sm leading-6 text-gray-700">
             Due to the variations in monitors and browsers, the color samples displayed on this tool may appear different on different monitors and devices. Computer monitors are not all calibrated equally and color reproduction on the Internet is not precise. Since it is not possible to guarantee our online colors will look the same on all computers, we do not guarantee that what you see accurately portrays the color of the actual color of the Sheet Metal. We do our very best to make sure our samples are as close to the exact product as possible, but cannot guarantee that what you see is an exact sample. If it is important that the sample be exact, it is highly recommended that once you contact us.
           </p>
         </div>

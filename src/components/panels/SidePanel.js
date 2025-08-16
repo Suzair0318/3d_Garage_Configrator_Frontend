@@ -231,21 +231,21 @@ const SidePanel = () => {
 
   return (
     <div className="h-full overflow-y-auto">
-      <div className="p-4 space-y-4">
+      <div className="p-2 sm:p-4 space-y-2 sm:space-y-4">
         {/* Vertical Panels Toggle */}
         <div className="flex items-center justify-between">
-          <span className="text-sm font-semibold text-[#07223D]">Vertical Panels</span>
+          <span className="text-xs sm:text-sm font-semibold text-[#07223D]">Vertical Panels</span>
           <button
             onClick={() => handleFieldChange('verticalPanels', !fields.verticalPanels, 'checkbox')}
             className={`
-              relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-[#FF1717] focus:ring-offset-2
+              relative inline-flex h-5 w-9 sm:h-6 sm:w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-[#FF1717] focus:ring-offset-2
               ${fields.verticalPanels ? 'bg-[#FF1717]' : 'bg-gray-200'}
             `}
           >
             <span
               className={`
-                inline-block h-4 w-4 transform rounded-full bg-white transition-transform
-                ${fields.verticalPanels ? 'translate-x-6' : 'translate-x-1'}
+                inline-block h-3 w-3 sm:h-4 sm:w-4 transform rounded-full bg-white transition-transform
+                ${fields.verticalPanels ? 'translate-x-5 sm:translate-x-6' : 'translate-x-1'}
               `}
             />
           </button>
@@ -267,17 +267,17 @@ const SidePanel = () => {
             key={acc.key}
           >
             <div
-              className="flex items-center justify-between px-3 py-2 cursor-pointer transition-all duration-150 bg-transparent"
+              className="flex items-center justify-between px-2 sm:px-3 py-1.5 sm:py-2 cursor-pointer transition-all duration-150 bg-transparent"
               onClick={() => handleAccordion(acc.key)}
             >
               <span
-                className={`font-semibold text-sm ${expanded[acc.key] ? 'text-[#FF1717]' : 'text-[#07223D]'}`}
+                className={`font-semibold text-xs sm:text-sm ${expanded[acc.key] ? 'text-[#FF1717]' : 'text-[#07223D]'}`}
               >
                 {acc.label}
               </span>
               {expanded[acc.key] ? (
                 <svg
-                  className="w-4 h-4 text-[#FF1717] transition-all duration-150"
+                  className="w-3 h-3 sm:w-4 sm:h-4 text-[#FF1717] transition-all duration-150"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -286,7 +286,7 @@ const SidePanel = () => {
                 </svg>
               ) : (
                 <svg
-                  className="w-4 h-4 text-[#07223D] transition-all duration-150"
+                  className="w-3 h-3 sm:w-4 sm:h-4 text-[#07223D] transition-all duration-150"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -299,7 +299,7 @@ const SidePanel = () => {
             <div
               ref={(el) => { if (el) contentRefs.current[acc.key] = el; }}
               className={`
-                bg-transparent overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] px-3
+                bg-transparent overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] px-2 sm:px-3
                 ${expanded[acc.key] ? 'opacity-100' : 'opacity-0'}
               `}
               style={{
@@ -312,7 +312,7 @@ const SidePanel = () => {
             >
               <div
                 ref={(el) => { if (el) innerContentRefs.current[acc.key] = el; }}
-                className={`border-t border-gray-200 space-y-4 py-4 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${expanded[acc.key] ? 'translate-y-0' : '-translate-y-1'}`}
+                className={`border-t border-gray-200 space-y-2 sm:space-y-4 py-2 sm:py-4 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${expanded[acc.key] ? 'translate-y-0' : '-translate-y-1'}`}
               >
                 {acc.fields.map((field, idx) => {
                   const fieldName = getFieldName(acc.key, field.label);
@@ -320,7 +320,7 @@ const SidePanel = () => {
                   // RADIO GROUP
                   if (field.type === 'radio') {
                     return (
-                      <div className="space-y-2" key={`${acc.key}-${field.label}-${idx}`}>
+                      <div className="space-y-1 sm:space-y-2" key={`${acc.key}-${field.label}-${idx}`}>
                         {field.options.map(opt => (
                           <label className="flex items-center" key={`${acc.key}-${field.label}-${opt}`}>
                             <input
@@ -329,9 +329,9 @@ const SidePanel = () => {
                               value={opt}
                               checked={fields[fieldName] === opt}
                               onChange={e => handleFieldChange(fieldName, opt, 'radio')}
-                              className="w-4 h-4 text-[#FF1717] border-gray-300 focus:ring-[#FF1717] mr-2"
+                              className="w-3 h-3 sm:w-4 sm:h-4 text-[#FF1717] border-gray-300 focus:ring-[#FF1717] mr-1.5 sm:mr-2"
                             />
-                            <span className="text-sm font-semibold text-[#07223D] tracking-wide">{opt}</span>
+                            <span className="text-xs sm:text-sm font-semibold text-[#07223D] tracking-wide">{opt}</span>
                           </label>
                         ))}
                       </div>
@@ -341,11 +341,11 @@ const SidePanel = () => {
                   if (field.type === 'select') {
                     return (
                       <div key={`${acc.key}-${field.label}-${idx}`}>
-                        <label className="block text-sm font-semibold text-[#07223D]  mb-1">{field.label}</label>
+                        <label className="block text-xs sm:text-sm font-semibold text-[#07223D] mb-1">{field.label}</label>
                         <select
                           value={fields[fieldName]}
                           onChange={e => handleFieldChange(fieldName, e.target.value, 'select')}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-[#FF1717] focus:ring-2 focus:ring-red-100 bg-white text-sm"
+                          className="w-full px-2 sm:px-3 py-1.5 sm:py-2 border border-gray-300 rounded-md focus:outline-none focus:border-[#FF1717] focus:ring-2 focus:ring-red-100 bg-white text-xs sm:text-sm"
                         >
                           {field.options.map(opt => (
                             <option key={`${acc.key}-${field.label}-${opt}`} value={opt}>{opt}</option>
@@ -362,9 +362,9 @@ const SidePanel = () => {
                           type="checkbox"
                           checked={fields[fieldName]}
                           onChange={() => handleFieldChange(fieldName, !fields[fieldName], 'checkbox')}
-                          className="w-4 h-4 text-[#FF1717] border-gray-300 rounded focus:ring-[#FF1717] mr-2"
+                          className="w-3 h-3 sm:w-4 sm:h-4 text-[#FF1717] border-gray-300 rounded focus:ring-[#FF1717] mr-1.5 sm:mr-2"
                         />
-                        <span className="text-sm font-semibold text-[#07223D] tracking-wide">{field.label}</span>
+                        <span className="text-xs sm:text-sm font-semibold text-[#07223D] tracking-wide">{field.label}</span>
                       </label>
                     );
                   }

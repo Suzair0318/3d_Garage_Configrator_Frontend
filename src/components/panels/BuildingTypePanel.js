@@ -233,16 +233,16 @@ const BuildingTypePanel = (
   return (
     <div className="h-full overflow-y-auto">
       {/* Header Section */}
-      <div className="px-6 mb-2">
-        <h2 className="text-lg font-semibold text-[#07223D] mb-1">
+      <div className="px-3 sm:px-4 md:px-6 mb-2">
+        <h2 className="text-base sm:text-lg font-semibold text-[#07223D] mb-1">
           Pre-Designed Buildings
         </h2>
-        <p className="text-sm text-gray-600">
+        <p className="text-xs sm:text-sm text-gray-600">
           Select a buildings style from pre-designed building sets
         </p>
       </div>
       
-      <div className="p-2 px-4 space-y-2">
+      <div className="p-1 sm:p-2 px-2 sm:px-4 space-y-1 sm:space-y-2">
         {categories.map((category, index) => {
           const isExpanded = expandedCategory === category.id;
           const isSelected = selectedCategory === category.id; // Use dynamic selected state
@@ -263,18 +263,18 @@ const BuildingTypePanel = (
             >
               {/* Category Header - Compact */}
               <div
-                className="flex items-center justify-between px-3 py-2 cursor-pointer transition-all duration-150 bg-transparent"
+                className="flex items-center justify-between px-2 sm:px-3 py-1.5 sm:py-2 cursor-pointer transition-all duration-150 bg-transparent"
                 onClick={() => toggleCategory(category.id)}
               >
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center space-x-1 sm:space-x-2">
                   <span className={`
-                    font-semibold text-sm
+                    font-semibold text-xs sm:text-sm
                     ${(isExpanded || hasSelectedChild) ? 'text-[#FF1717]' : 'text-[#07223D]'}
                   `}>
                     {category.name}
                   </span>
                   {( hasSelectedChild) && (
-                    <span className="border border-[#FF1717] text-[#FF1717] text-xs px-1.5 py-0.5 rounded-[4px] font-medium">
+                    <span className="border border-[#FF1717] text-[#FF1717] text-[10px] sm:text-xs px-1 sm:px-1.5 py-0.5 rounded-[4px] font-medium">
                       selected
                     </span>
                   )}
@@ -282,7 +282,7 @@ const BuildingTypePanel = (
 
                 {isExpanded ? (
                   <svg
-                    className="w-4 h-4 text-[#FF1717] transition-all duration-150"
+                    className="w-3 h-3 sm:w-4 sm:h-4 text-[#FF1717] transition-all duration-150"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -291,7 +291,7 @@ const BuildingTypePanel = (
                   </svg>
                 ) : (
                   <svg
-                    className="w-4 h-4 text-[#07223D] transition-all duration-150"
+                    className="w-3 h-3 sm:w-4 sm:h-4 text-[#07223D] transition-all duration-150"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -305,7 +305,7 @@ const BuildingTypePanel = (
               <div
                 ref={(el) => { if (el) contentRefs.current[category.id] = el; }}
                 className={`
-                  bg-transparent overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] px-4
+                  bg-transparent overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] px-2 sm:px-4
                   ${isExpanded ? 'opacity-100' : 'opacity-0'}
                 `}
                 style={{
@@ -318,7 +318,7 @@ const BuildingTypePanel = (
               >
                   <div
                     ref={(el) => { if (el) innerContentRefs.current[category.id] = el; }}
-                    className={`flex flex-col gap-4 px-3 py-3 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${isExpanded ? 'translate-y-0' : '-translate-y-1'}`}
+                    className={`flex flex-col gap-2 sm:gap-4 px-1 sm:px-3 py-2 sm:py-3 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${isExpanded ? 'translate-y-0' : '-translate-y-1'}`}
                   >
                     {category.items.map((item, itemIndex) => (
                       <div
@@ -336,9 +336,9 @@ const BuildingTypePanel = (
                       >
                         {/* Selection Indicator */}
                         {selectedItem?.id === item.id && (
-                          <div className="absolute top-3 right-3 z-10">
-                            <div className="bg-[#FF1717] text-white rounded-full p-1">
-                              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                          <div className="absolute top-2 sm:top-3 right-2 sm:right-3 z-10">
+                            <div className="bg-[#FF1717] text-white rounded-full p-0.5 sm:p-1">
+                              <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="currentColor" viewBox="0 0 20 20">
                                 <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                               </svg>
                             </div>
@@ -347,17 +347,17 @@ const BuildingTypePanel = (
 
                         {/* Featured Badge */}
                         {item.featured && (
-                          <div className="absolute top-3 left-3 z-10">
-                            <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-full font-medium">
+                          <div className="absolute top-2 sm:top-3 left-2 sm:left-3 z-10">
+                            <span className="bg-red-500 text-white text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full font-medium">
                               Featured
                             </span>
                           </div>
                         )}
 
                         {/* Card Content */}
-                        <div className="p-3">
+                        <div className="p-2 sm:p-3">
                           {/* Large Image/Icon */}
-                          <div className="w-full h-28 rounded-lg flex items-center justify-center mb-3">
+                          <div className="w-full h-20 sm:h-24 md:h-28 rounded-lg flex items-center justify-center mb-2 sm:mb-3">
                             <img
                               src={item.image}
                               alt={item.name}
@@ -371,29 +371,29 @@ const BuildingTypePanel = (
 
                           {/* Item Details */}
                           <div className="text-center">
-                            <h4 className="font-bold text-gray-900 mb-1 text-base">
+                            <h4 className="font-bold text-gray-900 mb-1 text-sm sm:text-base leading-tight">
                               {item.name}
                             </h4>
 
                             {/* Dimensions in a clean grid */}
-                            <div className="grid grid-cols-3 gap-1 text-sm text-gray-600 mb-2">
-                              <div className="bg-gray-50 rounded-lg p-1">
-                                <div className="font-medium text-gray-800">Width</div>
-                                <div>{item.width}'</div>
+                            <div className="grid grid-cols-3 gap-0.5 sm:gap-1 text-xs sm:text-sm text-gray-600 mb-2">
+                              <div className="bg-gray-50 rounded-md sm:rounded-lg p-0.5 sm:p-1">
+                                <div className="font-medium text-gray-800 text-[10px] sm:text-xs">Width</div>
+                                <div className="text-xs sm:text-sm">{item.width}'</div>
                               </div>
-                              <div className="bg-gray-50 rounded-lg p-1">
-                                <div className="font-medium text-gray-800">Length</div>
-                                <div>{item.length}'</div>
+                              <div className="bg-gray-50 rounded-md sm:rounded-lg p-0.5 sm:p-1">
+                                <div className="font-medium text-gray-800 text-[10px] sm:text-xs">Length</div>
+                                <div className="text-xs sm:text-sm">{item.length}'</div>
                               </div>
-                              <div className="bg-gray-50 rounded-lg p-1">
-                                <div className="font-medium text-gray-800">Height</div>
-                                <div>{item.height}'</div>
+                              <div className="bg-gray-50 rounded-md sm:rounded-lg p-0.5 sm:p-1">
+                                <div className="font-medium text-gray-800 text-[10px] sm:text-xs">Height</div>
+                                <div className="text-xs sm:text-sm">{item.height}'</div>
                               </div>
                             </div>
 
                             {selectedItem?.id === item.id && (
                               <button
-                                className="mx-auto w-[85%] sm:w-4/5 py-1 rounded-lg font-medium transition-all duration-200 bg-[#07223D] text-white shadow-md cursor-pointer text-sm"
+                                className="mx-auto w-full sm:w-[85%] md:w-4/5 py-1.5 sm:py-1 rounded-lg font-medium transition-all duration-200 bg-[#07223D] text-white shadow-md cursor-pointer text-xs sm:text-sm"
                                 onClick={() => handle_open_size_panel()}
                               >
                                 Next ( Build & Size)

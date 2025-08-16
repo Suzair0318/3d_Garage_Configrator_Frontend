@@ -65,34 +65,34 @@ const SizePanel = (
 
   return (
     <div className="h-full overflow-y-auto">
-      <div className="p-4 space-y-6">
-        <h3 className="text-[#FF1717] font-semibold mb-3 text-center">
+      <div className="p-2 sm:p-4 space-y-4 sm:space-y-6">
+        <h3 className="text-[#FF1717] font-semibold mb-2 sm:mb-3 text-center text-sm sm:text-base">
           Selected Building
         </h3>
         {/* Selected Building Section */}
-        <div className="border border-red-200 rounded-lg p-4 mx-8">
-          <div className="relative bg-white rounded-lg p-4">
-            <div className="absolute top-2 right-2">
-              <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
-                <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+        <div className="border border-red-200 rounded-lg p-2 sm:p-4 mx-2 sm:mx-4 md:mx-8">
+          <div className="relative bg-white rounded-lg p-2 sm:p-4">
+            <div className="absolute top-1 sm:top-2 right-1 sm:right-2">
+              <div className="w-5 h-5 sm:w-6 sm:h-6 bg-green-500 rounded-full flex items-center justify-center">
+                <svg className="w-3 h-3 sm:w-4 sm:h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                 </svg>
               </div>
             </div>
             <div className="flex flex-col items-center">
-              <div className="mb-3 w-full flex justify-center">
+              <div className="mb-2 sm:mb-3 w-full flex justify-center">
                 {/* If you have real images per type, swap based on selectedBuilding.id */}
                 <img
                   src={selectedBuilding ? selectedBuilding?.image : '/images/carport.png'}
                   alt={selectedBuilding?.name}
-                  className="h-24 object-contain"
+                  className="h-16 sm:h-20 md:h-24 object-contain"
                 />
               </div>
-              <h4 className="font-semibold text-[#07223D] text-sm uppercase mb-2 text-center">
+              <h4 className="font-semibold text-[#07223D] text-xs sm:text-sm uppercase mb-1 sm:mb-2 text-center leading-tight">
                 {selectedBuilding?.name}
               </h4>
               <button
-                className="bg-[#07223D] text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-700 transition-colors w-full"
+                className="bg-[#07223D] text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-md text-xs sm:text-sm font-medium hover:bg-gray-700 transition-colors w-full"
                 onClick={() => handle_open_size_panel()}
               >
                 Change Building
@@ -105,10 +105,10 @@ const SizePanel = (
         {/* Config-driven sections */}
         {panelConfig.map(section => (
           <div key={section.key}>
-            <h3 className={`font-semibold text-lg mb-4 ${section.key === 'gauge' ? 'text-[#07223D]' : 'text-gray-800'}`}>
+            <h3 className={`font-semibold text-base sm:text-lg mb-2 sm:mb-4 ${section.key === 'gauge' ? 'text-[#07223D]' : 'text-gray-800'}`}>
               {section.title}
             </h3>
-            <div className={section.key === 'roofPitch' || section.key === 'gauge' ? 'space-y-2' : 'space-y-4'}>
+            <div className={section.key === 'roofPitch' || section.key === 'gauge' ? 'space-y-1 sm:space-y-2' : 'space-y-2 sm:space-y-4'}>
               {section.fields.map((field) => {
                 // derive state key based on section and label if not explicitly provided
                 const labelToKey = { Width: 'width', Length: 'length', Height: 'height', Style: 'roofStyle' };
@@ -119,11 +119,11 @@ const SizePanel = (
                   const stateKey = derivedKey;
                   return (
                     <div key={stateKey || field.label}>
-                      <label className="block text-sm font-semibold tracking-wide text-[#07223D] mb-2">{field.label}</label>
+                      <label className="block text-xs sm:text-sm font-semibold tracking-wide text-[#07223D] mb-1 sm:mb-2">{field.label}</label>
                       <select
                         value={values[stateKey]}
                         onChange={(e) => setters[stateKey](e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-[#FF1717] focus:ring-2 focus:ring-red-100 bg-white"
+                        className="w-full px-2 sm:px-3 py-1.5 sm:py-2 border border-gray-300 rounded-md focus:outline-none focus:border-[#FF1717] focus:ring-2 focus:ring-red-100 bg-white text-xs sm:text-sm"
                       >
                         {field.options?.map((option) => (
                           <option key={option} value={option}>{option}</option>
@@ -143,9 +143,9 @@ const SizePanel = (
                         value={option}
                         checked={values[stateKey] === option}
                         onChange={(e) => setters[stateKey](e.target.value)}
-                        className="w-4 h-4 text-[#FF1717] border-gray-300 focus:ring-[#FF1717]"
+                        className="w-3 h-3 sm:w-4 sm:h-4 text-[#FF1717] border-gray-300 focus:ring-[#FF1717]"
                       />
-                      <span className="ml-2 text-sm font-semibold tracking-wide text-[#07223D]">
+                      <span className="ml-1.5 sm:ml-2 text-xs sm:text-sm font-semibold tracking-wide text-[#07223D]">
                         {option}
                         {section.key === 'gauge' ? ' Gauge' : ''}
                         {section.key === 'roofPitch' && option === '3/12' ? ' (Standard)' : ''}

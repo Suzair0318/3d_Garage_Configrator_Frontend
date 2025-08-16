@@ -74,8 +74,8 @@ const SlidingPanel = ({ activeMenuItem, isVisible, onClose, setActiveIndex, setA
               duration: 0.2,
               ease: "easeInOut"
             }}
-            className="fixed left-[100px] top-6 bottom-6 z-40 w-96 flex flex-col
-                     bg-white rounded-tl-2xl rounded-bl-2xl rounded-br-2xl rounded-tr-none border border-gray-200/50 shadow-xl
+            className="fixed left-2 sm:left-[100px] top-2 sm:top-6 bottom-2 sm:bottom-6 right-2 sm:right-auto z-40 w-auto sm:w-96 flex flex-col
+                     bg-white rounded-2xl sm:rounded-tl-2xl sm:rounded-bl-2xl sm:rounded-br-2xl sm:rounded-tr-none border border-gray-200/50 shadow-xl
                      backdrop-blur-sm"
           >
             {/* Outside Close Button (top-right, outside the panel) */}
@@ -83,9 +83,9 @@ const SlidingPanel = ({ activeMenuItem, isVisible, onClose, setActiveIndex, setA
               type="button"
               aria-label="Close panel"
               onClick={onClose}
-              className="absolute -top-3 -right-3 md:top-9 md:-right-10 w-9 h-9 md:w-10 md:h-14
-                         rounded-r-lg bg-white hover:bg-[#07223D] hover:text-white
-                         flex items-center justify-center transition-colors duration-200 group cursor-pointer
+              className="absolute top-2 right-2 sm:-top-3 sm:-right-3 md:top-9 md:-right-10 w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-14
+                         rounded-full sm:rounded-r-lg bg-white hover:bg-[#07223D] hover:text-white
+                         flex items-center justify-center transition-colors duration-200 group cursor-pointer shadow-md
                          "
             >
               <svg
@@ -104,10 +104,10 @@ const SlidingPanel = ({ activeMenuItem, isVisible, onClose, setActiveIndex, setA
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.1, duration: 0.3 }}
-                  className="flex items-center justify-center p-4 border-gray-100"
+                  className="flex items-center justify-center p-3 sm:p-4 border-gray-100"
                 >
                   <div className="flex items-center justify-center w-full">
-                    <h2 className="text-lg text-center font-semibold text-[#FF1717]">
+                    <h2 className="text-base sm:text-lg text-center font-semibold text-[#FF1717]">
                       {activeMenuItem?.label}
                     </h2>
                   </div>

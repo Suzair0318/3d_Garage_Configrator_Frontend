@@ -84,7 +84,7 @@ const LeanPanel = () => {
 
   return (
     <div className="h-full overflow-y-auto">
-      <div className="p-4 space-y-6">
+      <div className="p-2 sm:p-4 space-y-4 sm:space-y-6">
         {/* Dynamic Left/Right Sections driven by fieldDefs */}
         {(['left', 'right']).map((sideKey) => {
           const enabled = sideKey === 'left' ? leftEnabled : rightEnabled;
@@ -95,33 +95,33 @@ const LeanPanel = () => {
             : (k, v) => setRightConfig(prev => ({ ...prev, [k]: v }));
           return (
             <div key={sideKey}>
-              <div className="flex items-center mb-4">
+              <div className="flex items-center mb-2 sm:mb-4">
                 <button
                   onClick={() => setEnabled(!enabled)}
                   className={`
-                    relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-[#FF1717] focus:ring-offset-2 mr-3
+                    relative inline-flex h-5 w-9 sm:h-6 sm:w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-[#FF1717] focus:ring-offset-2 mr-2 sm:mr-3
                     ${enabled ? 'bg-[#FF1717]' : 'bg-gray-200'}
                   `}
                 >
                   <span
                     className={`
-                      inline-block h-4 w-4 transform rounded-full bg-white transition-transform
-                      ${enabled ? 'translate-x-6' : 'translate-x-1'}
+                      inline-block h-3 w-3 sm:h-4 sm:w-4 transform rounded-full bg-white transition-transform
+                      ${enabled ? 'translate-x-5 sm:translate-x-6' : 'translate-x-1'}
                     `}
                   />
                 </button>
-                <label className="text-lg font-semibold text-gray-800">{sideMeta[sideKey].label}</label>
+                <label className="text-base sm:text-lg font-semibold text-gray-800">{sideMeta[sideKey].label}</label>
               </div>
 
-              <div className="space-y-4 ml-6">
+              <div className="space-y-2 sm:space-y-4 ml-3 sm:ml-6">
                 {(fieldDefsBySide[sideKey] || []).map((field) => (
                   <div key={`${sideKey}-${field.key}`}>
-                    <label className="block text-sm font-semibold text-[#07223D] mb-2">{field.label}</label>
+                    <label className="block text-xs sm:text-sm font-semibold text-[#07223D] mb-1 sm:mb-2">{field.label}</label>
                     {field.type === 'select' && (
                       <select
                         value={config[field.key]}
                         onChange={(e) => update(field.key, e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-[#FF1717] focus:ring-2 focus:ring-red-100 bg-white"
+                        className="w-full px-2 sm:px-3 py-1.5 sm:py-2 border border-gray-300 rounded-md focus:outline-none focus:border-[#FF1717] focus:ring-2 focus:ring-red-100 bg-white text-xs sm:text-sm"
                       >
                         {field.options.map((option) => (
                           <option key={option} value={option}>{option}</option>

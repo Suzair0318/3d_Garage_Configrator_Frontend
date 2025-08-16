@@ -1,20 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import useStore from '../../store/useStore';
 
-const wallOptions = {
-  front: ['Open', 'Closed', 'Partial'],
-  back: ['Open', 'Gable', 'Closed'],
-  left: ["Open", "1 Panel(6')", '2 Panels', '3 Panels'],
-  right: ["Open", "1 Panel(9')", '2 Panels', '3 Panels']
-};
-
-const leanOptions = {
-  width: ['6', '8', '10', '12', '14', '16', '18', '20'],
-  length: ['12', '16', '20', '24', '28', '32', '36', '40'],
-  height: ['6', '7', '8', '9', '10', '11', '12'],
-  alignment: ['Front', 'Center', 'Back']
-};
-
 const initialFieldState = {
   verticalPanels: false,
   buildingType: 'open',
@@ -41,46 +27,35 @@ const accordionConfig = [
     fields: [
       {
         type: 'radio',
-        name: 'buildingType',
         label: 'Building Type',
-        options: [
-          { value: 'open', label: 'Open' },
-          { value: 'fully-enclosed', label: 'Fully Enclosed' },
-        ],
+        options: ['open', 'fully-enclosed'],
       },
       {
         type: 'select',
-        name: 'frontWall',
         label: 'Front Wall',
-        options: wallOptions.front.map(v => ({ value: v, label: v })),
-        
+        options: ['Open', 'Closed', 'Partial'],
       },
       {
         type: 'select',
-        name: 'backWall',
         label: 'Back Wall',
-        options: wallOptions.back.map(v => ({ value: v, label: v })),
+        options: ['Open', 'Gable', 'Closed'],
       },
       {
         type: 'select',
-        name: 'leftWall',
         label: 'Left Wall',
-        options: wallOptions.left.map(v => ({ value: v, label: v })),
+        options: ['Open', "1 Panel(6')", '2 Panels', '3 Panels'],
       },
       {
         type: 'select',
-        name: 'rightWall',
         label: 'Right Wall',
-        options: wallOptions.right.map(v => ({ value: v, label: v })),
+        options: ['Open', "1 Panel(9')", '2 Panels', '3 Panels'],
       },
       {
         type: 'checkbox',
-        name: 'backStorage',
         label: 'Back Storage',
       },
       {
         type: 'checkbox',
-        name: 'insulation',
         label: 'Insulation',
       },
     ],
@@ -91,30 +66,23 @@ const accordionConfig = [
     fields: [
       {
         type: 'radio',
-        name: 'leanType',
         label: 'Lean Type',
-        options: [
-          { value: 'single', label: 'Single Lean' },
-          { value: 'double', label: 'Double Lean' },
-        ],
+        options: ['single', 'double'],
       },
       {
         type: 'select',
-        name: 'leanWidth',
         label: 'Front Wall',
-        options: leanOptions.width.map(v => ({ value: v, label: v })),
+        options: ['6', '8', '10', '12', '14', '16', '18', '20'],
       },
       {
         type: 'select',
-        name: 'leanLength',
         label: 'Back Wall',
-        options: leanOptions.alignment.map(v => ({ value: v, label: v })),
+        options: ['Front', 'Center', 'Back'],
       },
       {
         type: 'select',
-        name: 'leanHeight',
         label: 'Side Wall',
-        options: leanOptions.alignment.map(v => ({ value: v, label: v })),
+        options: ['Front', 'Center', 'Back'],
       }
     ],
   },
@@ -124,32 +92,25 @@ const accordionConfig = [
     fields: [
       {
         type: 'radio',
-        name: 'leanType',
         label: 'Lean Type',
-        options: [
-          { value: 'single', label: 'Single Lean' },
-          { value: 'double', label: 'Double Lean' },
-        ],
+        options: ['single', 'double'],
       },
       {
         type: 'select',
-        name: 'leanWidth',
         label: 'Front Wall',
-        options: leanOptions.width.map(v => ({ value: v, label: v })),
+        options: ['6', '8', '10', '12', '14', '16', '18', '20'],
       },
       {
         type: 'select',
-        name: 'leanLength',
         label: 'Back Wall',
-        options: leanOptions.alignment.map(v => ({ value: v, label: v })),
+        options: ['Front', 'Center', 'Back'],
       },
       {
         type: 'select',
-        name: 'leanHeight',
         label: 'Side Wall',
-        options: leanOptions.alignment.map(v => ({ value: v, label: v })),
+        options: ['Front', 'Center', 'Back'],
       }
-    ],
+    ],  
   },
 ];
 
@@ -244,6 +205,30 @@ const SidePanel = () => {
     setFields((prev) => ({ ...prev, [name]: type === 'checkbox' ? !prev[name] : value }));
   };
 
+  // Derive field key from section + label since 'name' was removed from config
+  const getFieldName = (sectionKey, fieldLabel) => {
+    if (sectionKey === 'centerBuilding') {
+      switch (fieldLabel) {
+        case 'Building Type': return 'buildingType';
+        case 'Front Wall': return 'frontWall';
+        case 'Back Wall': return 'backWall';
+        case 'Left Wall': return 'leftWall';
+        case 'Right Wall': return 'rightWall';
+        case 'Back Storage': return 'backStorage';
+        case 'Insulation': return 'insulation';
+        default: return '';
+      }
+    }
+    // Leans (left/right) currently map to shared lean fields
+    switch (fieldLabel) {
+      case 'Lean Type': return 'leanType';
+      case 'Front Wall': return 'leanWidth';
+      case 'Back Wall': return 'leanLength';
+      case 'Side Wall': return 'leanHeight';
+      default: return '';
+    }
+  };
+
   return (
     <div className="h-full overflow-y-auto">
       <div className="p-4 space-y-4">
@@ -329,22 +314,24 @@ const SidePanel = () => {
                 ref={(el) => { if (el) innerContentRefs.current[acc.key] = el; }}
                 className={`border-t border-gray-200 space-y-4 py-4 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${expanded[acc.key] ? 'translate-y-0' : '-translate-y-1'}`}
               >
-                {acc.fields.map(field => {
+                {acc.fields.map((field, idx) => {
+                  const fieldName = getFieldName(acc.key, field.label);
+                  if (!fieldName) return null;
                   // RADIO GROUP
                   if (field.type === 'radio') {
                     return (
-                      <div className="space-y-2" key={field.name}>
+                      <div className="space-y-2" key={`${acc.key}-${field.label}-${idx}`}>
                         {field.options.map(opt => (
-                          <label className="flex items-center" key={opt.value}>
+                          <label className="flex items-center" key={`${acc.key}-${field.label}-${opt}`}>
                             <input
                               type="radio"
-                              name={field.name}
-                              value={opt.value}
-                              checked={fields[field.name] === opt.value}
-                              onChange={e => handleFieldChange(field.name, opt.value, 'radio')}
+                              name={fieldName}
+                              value={opt}
+                              checked={fields[fieldName] === opt}
+                              onChange={e => handleFieldChange(fieldName, opt, 'radio')}
                               className="w-4 h-4 text-[#FF1717] border-gray-300 focus:ring-[#FF1717] mr-2"
                             />
-                            <span className="text-sm font-semibold text-[#07223D] tracking-wide">{opt.label}</span>
+                            <span className="text-sm font-semibold text-[#07223D] tracking-wide">{opt}</span>
                           </label>
                         ))}
                       </div>
@@ -353,15 +340,15 @@ const SidePanel = () => {
                   // SELECT
                   if (field.type === 'select') {
                     return (
-                      <div key={field.name}>
+                      <div key={`${acc.key}-${field.label}-${idx}`}>
                         <label className="block text-sm font-semibold text-[#07223D]  mb-1">{field.label}</label>
                         <select
-                          value={fields[field.name]}
-                          onChange={e => handleFieldChange(field.name, e.target.value, 'select')}
+                          value={fields[fieldName]}
+                          onChange={e => handleFieldChange(fieldName, e.target.value, 'select')}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-[#FF1717] focus:ring-2 focus:ring-red-100 bg-white text-sm"
                         >
                           {field.options.map(opt => (
-                            <option key={opt.value} value={opt.value}>{opt.label}</option>
+                            <option key={`${acc.key}-${field.label}-${opt}`} value={opt}>{opt}</option>
                           ))}
                         </select>
                       </div>
@@ -370,11 +357,11 @@ const SidePanel = () => {
                   // CHECKBOX
                   if (field.type === 'checkbox') {
                     return (
-                      <label className="flex items-center" key={field.name}>
+                      <label className="flex items-center" key={`${acc.key}-${field.label}-${idx}`}>
                         <input
                           type="checkbox"
-                          checked={fields[field.name]}
-                          onChange={() => handleFieldChange(field.name, !fields[field.name], 'checkbox')}
+                          checked={fields[fieldName]}
+                          onChange={() => handleFieldChange(fieldName, !fields[fieldName], 'checkbox')}
                           className="w-4 h-4 text-[#FF1717] border-gray-300 rounded focus:ring-[#FF1717] mr-2"
                         />
                         <span className="text-sm font-semibold text-[#07223D] tracking-wide">{field.label}</span>

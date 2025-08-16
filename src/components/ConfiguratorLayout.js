@@ -6,6 +6,7 @@ import SizePanel from "./panels/SizePanel";
 import TopInfoPanel from "./TopInfoPanel"; // Adjust path as needed
 import BottomControlPanel from "./BottomControlPanel"; // Adjust path as needed
 import ConfiguratorIframe from "./ConfiguratorIframe";
+import QuoteModal from "./QuoteModal";
 
 // Professional SVG icons as components
 const IconBuilding = () => (
@@ -81,10 +82,19 @@ export default function ConfiguratorLayout() {
   const [activeIndex, setActiveIndex] = useState(null); // Set "Building Type" as active by default
   const [activePanelItem, setActivePanelItem] = useState(null);
   const [isPanelVisible, setIsPanelVisible] = useState(false);
+  const [isQuoteModalOpen, setIsQuoteModalOpen] = useState(false);
 
  
 
   const handleClosePanel = () => {
+    setIsPanelVisible(false);
+    setActivePanelItem(null);
+    setActiveIndex(null);
+    setActivePanelItem(null);
+  };
+
+  const handleQuoteModalClose = () => {
+    setIsQuoteModalOpen(false);
     setIsPanelVisible(false);
     setActivePanelItem(null);
     setActiveIndex(null);
@@ -108,6 +118,7 @@ export default function ConfiguratorLayout() {
           isPanelVisible={isPanelVisible}
           setIsPanelVisible={setIsPanelVisible}
           menuItems={menuItems}
+          setIsQuoteModalOpen={setIsQuoteModalOpen}
         />
 
         {/* Main Viewer Area (iframe) */}
@@ -131,6 +142,12 @@ export default function ConfiguratorLayout() {
       <div className="z-30">
         <BottomControlPanel />
       </div>
+
+      {/* Quote Modal */}
+      <QuoteModal 
+        isOpen={isQuoteModalOpen}
+        onClose={handleQuoteModalClose}
+      />
     </div>
   );
 }

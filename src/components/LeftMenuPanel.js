@@ -1,11 +1,21 @@
 import { useState , useEffect } from 'react';
 import SlidingPanel from './SlidingPanel';
 
-export default function LeftMenuPanel({ onMenuItemClick , activeIndex , setActiveIndex , activePanelItem , setActivePanelItem , isPanelVisible , setIsPanelVisible , menuItems }) {
+export default function LeftMenuPanel({ onMenuItemClick , activeIndex , setActiveIndex , activePanelItem , setActivePanelItem , isPanelVisible , setIsPanelVisible , menuItems , setIsQuoteModalOpen }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleItemClick = (item, index) => {
     setActiveIndex(index);
+    
+    // Special handling for quotes - open modal instead of sliding panel
+    if (item.id === 'quotes') {
+      setIsQuoteModalOpen(true);
+      // Close any open sliding panel
+      setIsPanelVisible(false);
+      setActivePanelItem(null);
+      onMenuItemClick?.(item.label, index);
+      return;
+    }
     
     // If clicking the same item, toggle panel visibility
     if (activePanelItem?.id === item.id && isPanelVisible) {

@@ -23,16 +23,56 @@ const LeanPanel = () => {
   // Keeps side-specific mapping explicit without embedding state in the object
   const fieldDefsBySide = {
     left: [
-      { key: 'width', label: 'Width', type: 'select', options: ["6", "8", "10", "12", "14", "16", "18", "20"] },
-      { key: 'length', label: 'Length', type: 'select', options: ["8", "10", "12", "14", "16", "18", "20", "22", "24"] },
-      { key: 'height', label: 'Height', type: 'select', options: ["6", "7", "8", "9", "10", "11", "12"] },
-      { key: 'alignment', label: 'Alignment', type: 'select', options: ["Front", "Back", "Center"] },
+      {
+        key: 'width',
+        label: 'Width',
+        type: 'select',
+        options: ["6", "8", "10", "12", "14", "16", "18", "20"]
+      },
+      {
+        key: 'length',
+        label: 'Length',
+        type: 'select',
+        options: ["8", "10", "12", "14", "16", "18", "20", "22", "24"]
+      },
+      {
+        key: 'height',
+        label: 'Height',
+        type: 'select',
+        options: ["6", "7", "8", "9", "10", "11", "12"]
+      },
+      {
+        key: 'alignment',
+        label: 'Alignment',
+        type: 'select',
+        options: ["Front", "Back", "Center"]
+      },
     ],
     right: [
-      { key: 'width', label: 'Width', type: 'select', options: ["6", "8", "10", "12", "14", "16", "18", "20"] },
-      { key: 'length', label: 'Length', type: 'select', options: ["8", "10", "12", "14", "16", "18", "20", "22", "24"] },
-      { key: 'height', label: 'Height', type: 'select', options: ["6", "7", "8", "9", "10", "11", "12"] },
-      { key: 'alignment', label: 'Alignment', type: 'select', options: ["Front", "Back", "Center"] },
+      {
+        key: 'width',
+        label: 'Width',
+        type: 'select',
+        options: ["6", "8", "10", "12", "14", "16", "18", "20"]
+      },
+      {
+        key: 'length',
+        label: 'Length',
+        type: 'select',
+        options: ["8", "10", "12", "14", "16", "18", "20", "22", "24"]
+      },
+      {
+        key: 'height',
+        label: 'Height',
+        type: 'select',
+        options: ["6", "7", "8", "9", "10", "11", "12"]
+      },
+      {
+        key: 'alignment',
+        label: 'Alignment',
+        type: 'select',
+        options: ["Front", "Back", "Center"]
+      },
     ],
   };
 

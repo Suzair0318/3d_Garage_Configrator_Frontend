@@ -7,6 +7,8 @@ import DefaultPanel from './panels/DefaultPanel';
 import LeanPanel from './panels/LeanPanel';
 import SidePanel from './panels/SidePanel';
 import DoorsWindowsPanel from './panels/DoorsWindowsPanel';
+import OptionsPanel from './panels/OptionsPanel';
+
 const SlidingPanel = ({ activeMenuItem, isVisible, onClose, setActiveIndex, setActivePanelItem }) => {
   const [expandedCategory, setExpandedCategory] = useState(null);
   const [selectedItem, setSelectedItem] = useState(null);
@@ -38,7 +40,7 @@ const SlidingPanel = ({ activeMenuItem, isVisible, onClose, setActiveIndex, setA
       case 'doors':
         return <DoorsWindowsPanel />;
       case 'options':
-        return <DefaultPanel title="Additional Options" description="Explore extra features and customization options." />;
+        return <OptionsPanel />;
       case 'summary':
         return <DefaultPanel title="Configuration Summary" description="Review your garage configuration and specifications." />;
       case 'quotes':

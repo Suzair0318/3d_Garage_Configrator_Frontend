@@ -5,66 +5,33 @@ const ColorsPanel = () => {
   const [selectedTrim, setSelectedTrim] = useState('green');
   const [selectedWall, setSelectedWall] = useState('red');
   const [addWainscot, setAddWainscot] = useState(false);
-
-  const roofColors = [
-    { id: 'brown', name: 'Brown', color: '#8B4513' },
-    { id: 'charcoal', name: 'Charcoal', color: '#36454F' },
-    { id: 'green', name: 'Green', color: '#228B22' },
-    { id: 'red', name: 'Red', color: '#DC143C' },
-    { id: 'tan', name: 'Tan', color: '#D2B48C' },
-    { id: 'darkBrown', name: 'Dark Brown', color: '#654321' },
-    { id: 'darkGreen', name: 'Dark Green', color: '#006400' },
-    { id: 'lightBlue', name: 'Light Blue', color: '#ADD8E6' },
-    { id: 'blue', name: 'Blue', color: '#0066CC' },
-    { id: 'burgundy', name: 'Burgundy', color: '#800020' },
-    { id: 'cream', name: 'Cream', color: '#FFFDD0' },
-    { id: 'gray', name: 'Gray', color: '#808080' },
-    { id: 'darkGray', name: 'Dark Gray', color: '#555555' },
-    { id: 'beige', name: 'Beige', color: '#F5F5DC' },
-    { id: 'steelBlue', name: 'Steel Blue', color: '#4682B4' },
-    { id: 'lightTan', name: 'Light Tan', color: '#E6D3A3' },
-    { id: 'white', name: 'White', color: '#FFFFFF' }
+  // Single source of truth for colors (future: replace with API response)
+  // Each color indicates which categories it applies to.
+  const allColors = [
+    { id: 'brown', name: 'Brown', color: '#8B4513', categories: ['roof', 'trim', 'wall'] },
+    { id: 'charcoal', name: 'Charcoal', color: '#36454F', categories: ['roof', 'trim', 'wall'] },
+    { id: 'green', name: 'Green', color: '#228B22', categories: ['roof', 'trim', 'wall'] },
+    { id: 'red', name: 'Red', color: '#DC143C', categories: ['roof', 'trim', 'wall'] },
+    { id: 'tan', name: 'Tan', color: '#D2B48C', categories: ['roof', 'trim', 'wall'] },
+    { id: 'darkBrown', name: 'Dark Brown', color: '#654321', categories: ['roof', 'trim', 'wall'] },
+    { id: 'darkGreen', name: 'Dark Green', color: '#006400', categories: ['roof', 'trim', 'wall'] },
+    { id: 'lightBlue', name: 'Light Blue', color: '#ADD8E6', categories: ['roof', 'trim', 'wall'] },
+    { id: 'blue', name: 'Blue', color: '#0066CC', categories: ['roof', 'trim', 'wall'] },
+    { id: 'burgundy', name: 'Burgundy', color: '#800020', categories: ['roof', 'trim', 'wall'] },
+    { id: 'darkBurgundy', name: 'Dark Burgundy', color: '#5D001E', categories: ['wall'] },
+    { id: 'cream', name: 'Cream', color: '#FFFDD0', categories: ['roof', 'trim', 'wall'] },
+    { id: 'gray', name: 'Gray', color: '#808080', categories: ['roof', 'trim', 'wall'] },
+    { id: 'darkGray', name: 'Dark Gray', color: '#555555', categories: ['roof', 'trim', 'wall'] },
+    { id: 'beige', name: 'Beige', color: '#F5F5DC', categories: ['roof', 'trim', 'wall'] },
+    { id: 'steelBlue', name: 'Steel Blue', color: '#4682B4', categories: ['roof', 'trim', 'wall'] },
+    { id: 'lightTan', name: 'Light Tan', color: '#E6D3A3', categories: ['roof', 'trim', 'wall'] },
+    { id: 'white', name: 'White', color: '#FFFFFF', categories: ['roof', 'trim', 'wall'] },
   ];
 
-  const trimColors = [
-    { id: 'brown', name: 'Brown', color: '#8B4513' },
-    { id: 'charcoal', name: 'Charcoal', color: '#36454F' },
-    { id: 'green', name: 'Green', color: '#228B22' },
-    { id: 'red', name: 'Red', color: '#DC143C' },
-    { id: 'tan', name: 'Tan', color: '#D2B48C' },
-    { id: 'darkBrown', name: 'Dark Brown', color: '#654321' },
-    { id: 'darkGreen', name: 'Dark Green', color: '#006400' },
-    { id: 'lightBlue', name: 'Light Blue', color: '#ADD8E6' },
-    { id: 'blue', name: 'Blue', color: '#0066CC' },
-    { id: 'burgundy', name: 'Burgundy', color: '#800020' },
-    { id: 'cream', name: 'Cream', color: '#FFFDD0' },
-    { id: 'gray', name: 'Gray', color: '#808080' },
-    { id: 'darkGray', name: 'Dark Gray', color: '#555555' },
-    { id: 'beige', name: 'Beige', color: '#F5F5DC' },
-    { id: 'steelBlue', name: 'Steel Blue', color: '#4682B4' },
-    { id: 'lightTan', name: 'Light Tan', color: '#E6D3A3' },
-    { id: 'white', name: 'White', color: '#FFFFFF' }
-  ];
-
-  const wallColors = [
-    { id: 'brown', name: 'Brown', color: '#8B4513' },
-    { id: 'charcoal', name: 'Charcoal', color: '#36454F' },
-    { id: 'burgundy', name: 'Burgundy', color: '#800020' },
-    { id: 'red', name: 'Cardinal Red', color: '#DC143C' },
-    { id: 'tan', name: 'Tan', color: '#D2B48C' },
-    { id: 'darkBrown', name: 'Dark Brown', color: '#654321' },
-    { id: 'darkGreen', name: 'Dark Green', color: '#006400' },
-    { id: 'lightBlue', name: 'Light Blue', color: '#ADD8E6' },
-    { id: 'blue', name: 'Blue', color: '#0066CC' },
-    { id: 'darkBurgundy', name: 'Dark Burgundy', color: '#5D001E' },
-    { id: 'cream', name: 'Cream', color: '#FFFDD0' },
-    { id: 'gray', name: 'Gray', color: '#808080' },
-    { id: 'darkGray', name: 'Dark Gray', color: '#555555' },
-    { id: 'beige', name: 'Beige', color: '#F5F5DC' },
-    { id: 'steelBlue', name: 'Steel Blue', color: '#4682B4' },
-    { id: 'lightTan', name: 'Light Tan', color: '#E6D3A3' },
-    { id: 'white', name: 'White', color: '#FFFFFF' }
-  ];
+  // Derived views (what the UI needs today)
+  const roofColors = allColors.filter(c => c.categories.includes('roof'));
+  const trimColors = allColors.filter(c => c.categories.includes('trim'));
+  const wallColors = allColors.filter(c => c.categories.includes('wall'));
 
   const ColorSelector = ({ title, colors, selected, onSelect, selectedColorName }) => (
     <div className="mb-8">

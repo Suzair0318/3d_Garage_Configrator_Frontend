@@ -30,7 +30,7 @@ const SlidingPanel = ({ activeMenuItem, isVisible, onClose, setActiveIndex, setA
         return <SizePanel
           setActiveIndex={setActiveIndex}
           setActivePanelItem={setActivePanelItem}
-           />;
+        />;
       case 'colors':
         return <ColorsPanel />;
       case 'lean':
@@ -84,7 +84,7 @@ const SlidingPanel = ({ activeMenuItem, isVisible, onClose, setActiveIndex, setA
               aria-label="Close panel"
               onClick={onClose}
               className="absolute top-2 right-2 sm:-top-3 sm:-right-3 md:top-9 md:-right-10 w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-14
-                         rounded-full sm:rounded-r-lg bg-white hover:bg-[#07223D] hover:text-white
+                          sm:rounded-tr-md sm:rounded-br-md bg-white hover:bg-[#07223D] hover:text-white
                          flex items-center justify-center transition-colors duration-200 group cursor-pointer shadow-md
                          "
             >

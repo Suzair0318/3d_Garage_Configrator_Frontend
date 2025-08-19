@@ -16,6 +16,9 @@ const BuildingTypePanel = (
   
   const [selectedCategory, setSelectedCategory] = useState(null);
   const setSelectedBuilding = useStore(state => state.setSelectedBuilding);
+
+   // API-driven categories
+   const [categories, setCategories] = useState([]);
   
   // Refs to measure dynamic content heights for smooth accordion animation
   const contentRefs = useRef({}); // animated wrapper
@@ -67,149 +70,164 @@ const BuildingTypePanel = (
       cancelAnimationFrame(raf);
     };
   }, [expandedCategory, selectedItem]);
+ 
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const res = await fetch('http://localhost:3001/api/building/categories_items');
+        const data = await res.json();
+        console.log(data);
+        setCategories(Array.isArray(data) ? data : []);
+      } catch (e) {
+        console.error('Failed to load categories', e);
+      }
+    };
+    load();
+  }, []);
 
-  const categories = [
-    {
-      id: 'carports',
-      name: 'Carports',
-      items: [
-        {
-          id: 'standard-carport',
-          name: 'Standard Carport',
-          width: '12-24',
-          length: '20-100',
-          height: '8-12',
-          image: '/stanadard_carpot.png'
-        },
-        {
-          id: 'triple_wide_carpot',
-          name: 'Triple Wide Carpot',
-          width: '12-30',
-          length: '20-100',
-          height: '8-14',
-          image: '/triple_wide_carpot.png'
-        },
-        {
-          id: 'utility_carport',
-          name: 'Utility Carport',
-          width: '12-30',
-          length: '20-100',
-          height: '8-14',
-          image: '/utility_carpot.png'
-        }
-      ]
-    },
-    {
-      id: 'garages',
-      name: 'Garages',
-      items: [
-        {
-          id: 'standard_garage',
-          name: 'Standard Garage',
-          width: '12-16',
-          length: '20-24',
-          height: '8-12',
-          image: '/standard_garage.png'
-        },
-        {
-          id: 'garage_with_lean_to',
-          name: 'Garage with Lean To',
-          width: '20-24',
-          length: '20-30',
-          height: '8-14',
-          image: '/garage_with_lean.png'
-        },
-        {
-          id: 'triple_wide_garage',
-          name: 'Triple Wide Garage',
-          width: '24-30',
-          length: '30-40',
-          height: '10-16',
-          image: '/triple_wide_garage.png'
-        }
-      ]
-    },
-    {
-      id: 'barns',
-      name: 'Barns',
-      items: [
-        {
-          id: 'standard_barns',
-          name: 'Standard Barns',
-          width: '30-40',
-          length: '40-60',
-          height: '12-20',
-          image: '/standard_barns.png'
-        },
-        {
-          id: 'raised_center_barns',
-          name: 'Raised Center Barns',
-          width: '20-30',
-          length: '30-50',
-          height: '10-16',
-          image: '/raised_center_barns.png'
-        }
-      ]
-    },
-    {
-      id: 'rv-covers',
-      name: 'RV Covers',
-      items: [
-        {
-          id: 'rv-cover',
-          name: 'RV Cover',
-          width: '12-24',
-          length: '20-100',
-          height: '10-16',
-          image: '/rv_cover.png',
-        }
-      ]
-    },
-    {
-      id: 'commercials',
-      name: 'Commercials',
-      items: [
-        {
-          id: 'commercial_carpot',
-          name: 'Commercial Carpot',
-          width: '40-100',
-          length: '60-200',
-          height: '16-30',
-          image: '/commercial_carpot.png'
-        },
-        {
-          id: 'commercial_building',
-          name: 'Commercial Building',
-          width: '30-60',
-          length: '40-100',
-          height: '12-20',
-          image: '/commercial_building.png'
-        }
-      ]
-    },
-    {
-      id: 'free-standings',
-      name: 'Free Standings',
-      items: [
-        {
-          id: 'free_standing_building',
-          name: 'Free Standing Building',
-          width: '20-40',
-          length: '20-60',
-          height: '10-16',
-          image: '/free_standard_building.png'
-        },
-        {
-          id: 'free_standing_lean_to',
-          name: 'Free Standing Lean To',
-          width: '12-20',
-          length: '12-20',
-          height: '8-12',
-          image: '/free_strandard_lean.png'
-        }
-      ]
-    }
-  ];
+
+  // const categories = [
+  //   {
+  //     id: 'carports',
+  //     name: 'Carports',
+  //     items: [
+  //       {
+  //         id: 'standard-carport',
+  //         name: 'Standard Carport',
+  //         width: '12-24',
+  //         length: '20-100',
+  //         height: '8-12',
+  //         image: '/stanadard_carpot.png'
+  //       },
+  //       {
+  //         id: 'triple_wide_carpot',
+  //         name: 'Triple Wide Carpot',
+  //         width: '12-30',
+  //         length: '20-100',
+  //         height: '8-14',
+  //         image: '/triple_wide_carpot.png'
+  //       },
+  //       {
+  //         id: 'utility_carport',
+  //         name: 'Utility Carport',
+  //         width: '12-30',
+  //         length: '20-100',
+  //         height: '8-14',
+  //         image: '/utility_carpot.png'
+  //       }
+  //     ]
+  //   },
+  //   {
+  //     id: 'garages',
+  //     name: 'Garages',
+  //     items: [
+  //       {
+  //         id: 'standard_garage',
+  //         name: 'Standard Garage',
+  //         width: '12-16',
+  //         length: '20-24',
+  //         height: '8-12',
+  //         image: '/standard_garage.png'
+  //       },
+  //       {
+  //         id: 'garage_with_lean_to',
+  //         name: 'Garage with Lean To',
+  //         width: '20-24',
+  //         length: '20-30',
+  //         height: '8-14',
+  //         image: '/garage_with_lean.png'
+  //       },
+  //       {
+  //         id: 'triple_wide_garage',
+  //         name: 'Triple Wide Garage',
+  //         width: '24-30',
+  //         length: '30-40',
+  //         height: '10-16',
+  //         image: '/triple_wide_garage.png'
+  //       }
+  //     ]
+  //   },
+  //   {
+  //     id: 'barns',
+  //     name: 'Barns',
+  //     items: [
+  //       {
+  //         id: 'standard_barns',
+  //         name: 'Standard Barns',
+  //         width: '30-40',
+  //         length: '40-60',
+  //         height: '12-20',
+  //         image: '/standard_barns.png'
+  //       },
+  //       {
+  //         id: 'raised_center_barns',
+  //         name: 'Raised Center Barns',
+  //         width: '20-30',
+  //         length: '30-50',
+  //         height: '10-16',
+  //         image: '/raised_center_barns.png'
+  //       }
+  //     ]
+  //   },
+  //   {
+  //     id: 'rv-covers',
+  //     name: 'RV Covers',
+  //     items: [
+  //       {
+  //         id: 'rv-cover',
+  //         name: 'RV Cover',
+  //         width: '12-24',
+  //         length: '20-100',
+  //         height: '10-16',
+  //         image: '/rv_cover.png',
+  //       }
+  //     ]
+  //   },
+  //   {
+  //     id: 'commercials',
+  //     name: 'Commercials',
+  //     items: [
+  //       {
+  //         id: 'commercial_carpot',
+  //         name: 'Commercial Carpot',
+  //         width: '40-100',
+  //         length: '60-200',
+  //         height: '16-30',
+  //         image: '/commercial_carpot.png'
+  //       },
+  //       {
+  //         id: 'commercial_building',
+  //         name: 'Commercial Building',
+  //         width: '30-60',
+  //         length: '40-100',
+  //         height: '12-20',
+  //         image: '/commercial_building.png'
+  //       }
+  //     ]
+  //   },
+  //   {
+  //     id: 'free-standings',
+  //     name: 'Free Standings',
+  //     items: [
+  //       {
+  //         id: 'free_standing_building',
+  //         name: 'Free Standing Building',
+  //         width: '20-40',
+  //         length: '20-60',
+  //         height: '10-16',
+  //         image: '/free_standard_building.png'
+  //       },
+  //       {
+  //         id: 'free_standing_lean_to',
+  //         name: 'Free Standing Lean To',
+  //         width: '12-20',
+  //         length: '12-20',
+  //         height: '8-12',
+  //         image: '/free_strandard_lean.png'
+  //       }
+  //     ]
+  //   }
+  // ];
 
   const toggleCategory = (categoryId) => {
     setExpandedCategory(expandedCategory === categoryId ? null : categoryId);
@@ -268,10 +286,10 @@ const BuildingTypePanel = (
               >
                 <div className="flex items-center space-x-1 sm:space-x-2">
                   <span className={`
-                    font-semibold text-xs sm:text-sm
+                    font-semibold text-xs sm:text-sm capitalize
                     ${(isExpanded || hasSelectedChild) ? 'text-[#FF1717]' : 'text-[#07223D]'}
                   `}>
-                    {category.name}
+                    {category.name?.replace(/_/g, ' ')}
                   </span>
                   {( hasSelectedChild) && (
                     <span className="border border-[#FF1717] text-[#FF1717] text-[10px] sm:text-xs px-1 sm:px-1.5 py-0.5 rounded-[4px] font-medium">

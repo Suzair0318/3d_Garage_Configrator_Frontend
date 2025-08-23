@@ -16,9 +16,16 @@ const BuildingTypePanel = (
   
   const [selectedCategory, setSelectedCategory] = useState(null);
   const setSelectedBuilding = useStore(state => state.setSelectedBuilding);
+  const setEvents = useStore(state => state.setEvents);
+  const events = useStore(state => state.events);
+  // Categories cache from store
+  const categoriesFromStore = useStore(state => state.categories);
+  const setCategoriesInStore = useStore(state => state.setCategories);
+
 
    // API-driven categories
    const [categories, setCategories] = useState([]);
+   
   
   // Refs to measure dynamic content heights for smooth accordion animation
   const contentRefs = useRef({}); // animated wrapper
@@ -30,6 +37,7 @@ const BuildingTypePanel = (
     window.addEventListener('resize', onResize);
     return () => window.removeEventListener('resize', onResize);
   }, []);
+
 
   // Keep outer animated maxHeight in sync with inner content size while expanded
   useEffect(() => {
@@ -71,18 +79,64 @@ const BuildingTypePanel = (
     };
   }, [expandedCategory, selectedItem]);
  
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
+    const initFromData = (data) => {
+      setCategories(Array.isArray(data) ? data : []);
+
+      // Auto-select default item if nothing is selected yet
+      if (!selectedItem && Array.isArray(data)) {
+        // Prefer category named 'carports' and item named 'Standard Carport'
+        const targetCategory = data.find(c =>
+          typeof c.name === 'string' && c.name.toLowerCase() === 'carports'
+        ) || data.find(c => Array.isArray(c.items) && c.items.length > 0);
+
+        const targetItem = targetCategory?.items?.find(i =>
+          typeof i.name === 'string' && i.name.toLowerCase() === 'standard carport'
+        ) || targetCategory?.items?.[0];
+
+        if (targetCategory && targetItem) {
+          // Update local and global selections
+          setSelectedItem(targetItem);
+          setSelectedBuilding({
+            ...targetItem,
+            categoryId: targetCategory.id,
+            categoryName: targetCategory.name,
+          });
+          // Events are provided at category level as an array with a single object
+          const rawEvents = Array.isArray(targetCategory.events) ? (targetCategory.events[0] || {}) : {};
+          console.log("Raw Events", rawEvents);
+          setEvents(rawEvents);
+          // UI state: open/highlight the category
+          setSelectedCategory(targetCategory.id);
+        } else {
+          // Fallback: clear events if no items
+          setEvents({});
+        }
+      }
+    };
+
     const load = async () => {
       try {
         const res = await fetch('http://localhost:3001/api/building/categories_items');
         const data = await res.json();
+        console.log("API RUN AGAIN")
         console.log(data);
-        setCategories(Array.isArray(data) ? data : []);
+        // Persist to store and local
+        setCategoriesInStore(Array.isArray(data) ? data : []);
+        initFromData(data);
       } catch (e) {
         console.error('Failed to load categories', e);
       }
     };
-    load();
+
+    if (Array.isArray(categoriesFromStore) && categoriesFromStore.length > 0) {
+      // Use cached categories
+      initFromData(categoriesFromStore);
+    } else {
+      // Fetch once when cache is empty
+      load();
+    }
   }, []);
 
 
@@ -241,6 +295,10 @@ const BuildingTypePanel = (
       categoryId: category?.id,
       categoryName: category?.name,
     });
+    // On card selection, set events from the category (single object inside array)
+    // const rawEvents = Array.isArray(category?.events) ? (category.events[0] || {}) : {};
+    // setEvents( "Raw Events" ,  rawEvents);
+    console.log( "Current Events" ,  events)
   };
 
   const handle_open_size_panel = () => {
@@ -323,7 +381,7 @@ const BuildingTypePanel = (
               <div
                 ref={(el) => { if (el) contentRefs.current[category.id] = el; }}
                 className={`
-                  bg-transparent overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] px-2 sm:px-4
+                  bg-transparent overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] px-2 sm:px-4 
                   ${isExpanded ? 'opacity-100' : 'opacity-0'}
                 `}
                 style={{
@@ -334,94 +392,95 @@ const BuildingTypePanel = (
                 }}
                 aria-hidden={!isExpanded}
               >
-                  <div
-                    ref={(el) => { if (el) innerContentRefs.current[category.id] = el; }}
-                    className={`flex flex-col gap-2 sm:gap-4 px-1 sm:px-3 py-2 sm:py-3 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${isExpanded ? 'translate-y-0' : '-translate-y-1'}`}
-                  >
-                    {category.items.map((item, itemIndex) => (
-                      <div
-                        key={item.id}
-                        className={`
-                          relative bg-white rounded-xl border cursor-pointer transition-all duration-300 hover:shadow-lg hover:-translate-y-1
-                          ${selectedItem?.id === item.id
-                            ? 'border-[#FF1717] bg-[#FF1717] shadow-lg transform -translate-y-1'
-                            : 'border-gray-200 hover:border-gray-300'
-                          }
-                          ${item.featured ? 'ring-2 ring-red-200 bg-gradient-to-br from-red-50 to-orange-50' : ''}
-                        `}
-                        onClick={() => selectItem(item, category)}
-                        style={{ animationDelay: `${itemIndex * 100}ms` }}
-                      >
-                        {/* Selection Indicator */}
-                        {selectedItem?.id === item.id && (
-                          <div className="absolute top-2 sm:top-3 right-2 sm:right-3 z-10">
-                            <div className="bg-[#FF1717] text-white rounded-full p-0.5 sm:p-1">
-                              <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="currentColor" viewBox="0 0 20 20">
-                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                              </svg>
-                            </div>
-                          </div>
-                        )}
-
-                        {/* Featured Badge */}
-                        {item.featured && (
-                          <div className="absolute top-2 sm:top-3 left-2 sm:left-3 z-10">
-                            <span className="bg-red-500 text-white text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full font-medium">
-                              Featured
-                            </span>
-                          </div>
-                        )}
-
-                        {/* Card Content */}
-                        <div className="p-2 sm:p-3">
-                          {/* Large Image/Icon */}
-                          <div className="w-full h-20 sm:h-24 md:h-28 rounded-lg flex items-center justify-center mb-2 sm:mb-3">
-                            <img
-                              src={item.image}
-                              alt={item.name}
-                              className="h-full object-contain"
-                              // onError={(e) => {
-                              //   e.target.onerror = null;
-                              //   e.target.src = 'https://via.placeholder.com/200x100?text=Building';
-                              // }}
-                            />
-                          </div>
-
-                          {/* Item Details */}
-                          <div className="text-center">
-                            <h4 className="font-bold text-gray-900 mb-1 text-sm sm:text-base leading-tight">
-                              {item.name}
-                            </h4>
-
-                            {/* Dimensions in a clean grid */}
-                            <div className="grid grid-cols-3 gap-0.5 sm:gap-1 text-xs sm:text-sm text-gray-600 mb-2">
-                              <div className="bg-gray-50 rounded-md sm:rounded-lg p-0.5 sm:p-1">
-                                <div className="font-medium text-gray-800 text-[10px] sm:text-xs">Width</div>
-                                <div className="text-xs sm:text-sm">{item.width}'</div>
-                              </div>
-                              <div className="bg-gray-50 rounded-md sm:rounded-lg p-0.5 sm:p-1">
-                                <div className="font-medium text-gray-800 text-[10px] sm:text-xs">Length</div>
-                                <div className="text-xs sm:text-sm">{item.length}'</div>
-                              </div>
-                              <div className="bg-gray-50 rounded-md sm:rounded-lg p-0.5 sm:p-1">
-                                <div className="font-medium text-gray-800 text-[10px] sm:text-xs">Height</div>
-                                <div className="text-xs sm:text-sm">{item.height}'</div>
-                              </div>
-                            </div>
-
-                            {selectedItem?.id === item.id && (
-                              <button
-                                className="mx-auto w-full sm:w-[85%] md:w-4/5 py-1.5 sm:py-1 rounded-lg font-medium transition-all duration-200 bg-[#07223D] text-white shadow-md cursor-pointer text-xs sm:text-sm"
-                                onClick={() => handle_open_size_panel()}
-                              >
-                                Next ( Build & Size)
-                              </button>
-                            )}
+                <div
+                  ref={(el) => { if (el) innerContentRefs.current[category.id] = el; }}
+                  className={`flex flex-col gap-2 sm:gap-4 px-1 sm:px-3 py-2 sm:py-3 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${isExpanded ? 'translate-y-0' : '-translate-y-1'}`}
+                >
+                  {category.items.map((item, itemIndex) => (
+                    <div
+                      key={item.id}
+                      className={`
+                        relative bg-white rounded-xl border cursor-pointer transition-all duration-300 hover:shadow-lg hover:-translate-y-1
+                        ${selectedItem?.id === item.id
+                          ? 'border-[#FF1717] bg-[#FF1717] shadow-lg transform -translate-y-1'
+                          : 'border-gray-200 hover:border-gray-300'
+                        }
+                        ${item.featured ? 'ring-2 ring-red-200 bg-gradient-to-br from-red-50 to-orange-50' : ''}
+                      `}
+                      onClick={() => selectItem(item, category)}
+                      style={{ animationDelay: `${itemIndex * 100}ms` }}
+                    >
+                      {/* Selection Indicator */}
+                      {selectedItem?.id === item.id && (
+                        <div className="absolute top-2 sm:top-3 right-2 sm:right-3 z-10">
+                          <div className="bg-[#FF1717] text-white rounded-full p-0.5 sm:p-1">
+                            <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                            </svg>
                           </div>
                         </div>
+                      )}
+
+                      {/* Featured Badge */}
+                      {item.featured && (
+                        <div className="absolute top-2 sm:top-3 left-2 sm:left-3 z-10">
+                          <span className="bg-red-500 text-white text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full font-medium">
+                            Featured
+                          </span>
+                        </div>
+                      )}
+
+                      {/* Card Content */}
+                      <div className="p-2 sm:p-3">
+                        {/* Large Image/Icon */}
+                        <div className="w-full h-20 sm:h-24 md:h-28 rounded-lg flex items-center justify-center mb-2 sm:mb-3">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={item.image}
+                            alt={item.name}
+                            className="h-full object-contain"
+                            // onError={(e) => {
+                            //   e.target.onerror = null;
+                            //   e.target.src = 'https://via.placeholder.com/200x100?text=Building';
+                            // }}
+                          />
+                        </div>
+
+                        {/* Item Details */}
+                        <div className="text-center">
+                          <h4 className="font-bold text-gray-900 mb-1 text-sm sm:text-base leading-tight">
+                            {item.name}
+                          </h4>
+
+                          {/* Dimensions in a clean grid */}
+                          <div className="grid grid-cols-3 gap-0.5 sm:gap-1 text-xs sm:text-sm text-gray-600 mb-2">
+                            <div className="bg-gray-50 rounded-md sm:rounded-lg p-0.5 sm:p-1">
+                              <div className="font-medium text-gray-800 text-[10px] sm:text-xs">Width</div>
+                              <div className="text-xs sm:text-sm">{item.width}&#39;</div>
+                            </div>
+                            <div className="bg-gray-50 rounded-md sm:rounded-lg p-0.5 sm:p-1">
+                              <div className="font-medium text-gray-800 text-[10px] sm:text-xs">Length</div>
+                              <div className="text-xs sm:text-sm">{item.length}&#39;</div>
+                            </div>
+                            <div className="bg-gray-50 rounded-md sm:rounded-lg p-0.5 sm:p-1">
+                              <div className="font-medium text-gray-800 text-[10px] sm:text-xs">Height</div>
+                              <div className="text-xs sm:text-sm">{item.height}&#39;</div>
+                            </div>
+                          </div>
+
+                          {selectedItem?.id === item.id && (
+                            <button
+                              className="mx-auto w-full sm:w-[85%] md:w-4/5 py-1.5 sm:py-1 rounded-lg font-medium transition-all duration-200 bg-[#07223D] text-white shadow-md cursor-pointer text-xs sm:text-sm"
+                              onClick={() => handle_open_size_panel()}
+                            >
+                              Next ( Build & Size)
+                            </button>
+                          )}
+                        </div>
                       </div>
-                    ))}
-                  </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           );

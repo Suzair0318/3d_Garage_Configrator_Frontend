@@ -82,6 +82,7 @@ const SizePanel = (
             <div className="flex flex-col items-center">
               <div className="mb-2 sm:mb-3 w-full flex justify-center">
                 {/* If you have real images per type, swap based on selectedBuilding.id */}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={selectedBuilding ? selectedBuilding?.image : '/images/carport.png'}
                   alt={selectedBuilding?.name}

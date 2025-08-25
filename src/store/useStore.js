@@ -17,13 +17,15 @@ const useStore = create((set) => ({
     events: (eventsObj && typeof eventsObj === 'object' && !Array.isArray(eventsObj)) ? eventsObj : {}
   }),
   // Update a single event value by key
-  setEventValue: (key, value) => set((state) => ({
-    events: { ...state.events, [key]: value }
-  })),
+  setEventValue: (key, value) => set((state) => {
+    console.log('Store : setEventValue', { key, value });
+    return { events: { ...state.events, [key]: value } };
+  }),
   // Update multiple event values at once
-  patchEventValues: (partial) => set((state) => ({
-    events: { ...state.events, ...(partial && typeof partial === 'object' ? partial : {}) }
-  })),
+  patchEventValues: (partial) => set((state) => {
+    console.log('Store : patchEventValues', partial);
+    return { events: { ...state.events, ...(partial && typeof partial === 'object' ? partial : {}) } };
+  }),
 
   // Cached categories to avoid re-fetching on remount (BuildingTypePanel)
   categories: [],

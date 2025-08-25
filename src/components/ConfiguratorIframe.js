@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import useStore from '../store/useStore';
-import { setIframe, setReady, sendToConfigurator } from '../utils/configuratorBridge';
+import { sendMessageToPlayCanvas } from '../utils/configuratorBridge';
 
 export default function ConfiguratorIframe({ src = "https://playcanv.as/e/p/iUeWwwVb/", title = "3D Garage Configurator" }) {
   const iframeRef = useRef(null);
@@ -14,126 +14,137 @@ export default function ConfiguratorIframe({ src = "https://playcanv.as/e/p/iUeW
   // Events fetched from backend (simple array) stored in Zustand
   const events = useStore((s) => s.events);
   const setEvents = useStore((s) => s.setEvents);
+  const patchEventValues = useStore((s) => s.patchEventValues);
 
   // Fetch categories + events and pick the first category's events
-  // useEffect(() => {
-  //   let abort = false;
-  //   const fetchEvents = async () => {
-  //     try {
-  //       const res = await fetch('http://localhost:3001/api/building/categories_items');
-  //       if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  //       const data = await res.json();
-  //       if (abort) return;
-  //       const first = Array.isArray(data) ? data[0] : null;
-  //       const evts = first && Array.isArray(first.events) ? first.events : [];
-  //       setEvents(evts);
-  //     } catch (e) {
-  //       console.error('Failed to fetch events:', e);
-  //       setEvents([]);
-  //     }
-  //   };
-  //   fetchEvents();
-  //   return () => { abort = true; };
-  // }, []);
-
-  // Register iframe window in the global bridge
   useEffect(() => {
-    if (iframeRef.current) {
-      setIframe(iframeRef.current);
-    }
-    return () => {
-      // Clear on unmount
-      setIframe(null);
+    let abort = false;
+    const fetchEvents = async () => {
+      try {
+        const res = await fetch('http://localhost:3001/api/building/categories_items');
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        if (abort) return;
+        const first = Array.isArray(data) ? data[0] : null
+        const evts = first && Array.isArray(first.events) ? first.events : [];
+        setEvents(evts[0] || {});
+      } catch (e) {
+        console.error('Failed to fetch events:', e);
+        setEvents([]);
+      }
     };
+    fetchEvents();
+    return () => { abort = true; };
   }, []);
 
-  // useEffect(() => {
-  //   // Browser-only
-  //   if (typeof window === 'undefined') return;
 
-  //   const iframe = iframeRef.current;
-  //   if (!iframe) return;
+  useEffect(() => {
+    // Browser-only
+    if (typeof window === 'undefined') return;
 
-  //   const onWindowMessage = (event) => {
-  //     const data = event.data;
-  //     if (data === 'app:ready1') {
-  //       setIsLoading(false);
-  //       // Mark the bridge as ready so queued messages from anywhere flush
-  //       setReady(true);
+    const iframe = iframeRef.current;
+    if (!iframe) return;
 
-  //       const app = iframeRef.current;
-  //       if (!app || !app.contentWindow) return;
+    const onWindowMessage = (event) => {
+      const data = event.data;
+      if (data === 'app:ready1') {
+        setIsLoading(false);
 
-  //       const send = (payload) => app.contentWindow.postMessage(payload, '*');
-  //       const counts = {};
+        const app = iframeRef.current;
+        if (!app) return;
+        const post = (payload) => sendMessageToPlayCanvas(payload);
 
-  //       if (!Array.isArray(events) || events.length === 0) return;
-  //       events.forEach((evt) => {
-  //         // Track occurrences for events that need different values per occurrence
-  //         counts[evt] = (counts[evt] || 0) + 1;
+        // API-driven message sequence (persist to Zustand first, then send)
+        const e = (events && typeof events === 'object') ? events : {};
+        const def = {
+          barn_height: 10,
+          barn_Width: 24,
+          barn_Length: 40,
+          leansLeftW: 6,
+          leansLeftL: 20,
+          leansheightL: 6,
+          leansRightW: 10,
+          leansRightL: 40,
+          leansheightR: 6,
+          storageFeetL: 4,
+        };
+        const vOrDef = (k) => {
+          const v = e[k];
+          return (v === '' || v === undefined || v === null) ? def[k] : v;
+        };
 
-  //         if (evt === 'Carportsbuilding') {
-  //           send('Carportsbuilding');
-  //           return;
-  //         }
-  //         if (evt === 'barn_heightS') {
-  //           setTimeout(() => send('barn_heightS'), 1000);
-  //           return;
-  //         }
+        // 1) First patch store with the primary set
+        const primaryPatch = {
+          barn_height: vOrDef('barn_height'),
+          barn_Width: vOrDef('barn_Width'),
+          barn_Length: vOrDef('barn_Length'),
+          leansLeftW: vOrDef('leansLeftW'),
+          leansLeftL: vOrDef('leansLeftL'),
+          leansheightL: vOrDef('leansheightL'),
+          leansRightW: vOrDef('leansRightW'),
+          leansRightL: vOrDef('leansRightL'),
+          leansheightR: vOrDef('leansheightR'),
+          storageFeetL: vOrDef('storageFeetL'),
+        };
+        patchEventValues(primaryPatch);
+      
 
-  //         let value;
-  //         switch (evt) {
-  //           case 'barn_height':
-  //             value = 10; break;
-  //           case 'barn_Width':
-  //             value = 24; break;
-  //           case 'barn_Length':
-  //             value = 40; break;
-  //           case 'leansLeftW':
-  //             value = counts[evt] === 1 ? 6 : 10; break;
-  //           case 'leansLeftL':
-  //             value = counts[evt] === 1 ? 20 : 40; break;
-  //           case 'leansheightL':
-  //             value = 6; break;
-  //           case 'leansRightW':
-  //             value = 10; break;
-  //           case 'leansRightL':
-  //             value = 40; break;
-  //           case 'leansheightR':
-  //             value = 6; break;
-  //           case 'storageFeetL':
-  //             value = 4; break;
-  //           case 'Rsidewalls':
-  //           case 'Rbackwalls':
-  //           case 'Rfontwalls':
-  //             value = 'Open'; break;
-  //           default:
-  //             value = undefined;
-  //         }
+        // 2) Read back from store and send in desired order/format
+        const s = useStore.getState().events;
+        post('Carportsbuilding');
+        post('barn_height : ' + s.barn_height);
+        post('barn_Width : ' + s.barn_Width);
+        post('barn_Length : ' + s.barn_Length);
 
-  //         if (value !== undefined) {
-  //           send(`${evt} : ${value}`);
-  //         } else {
-  //           send(evt);
-  //         }
-  //       });
-  //     }
-  //   };
+        post('leansLeftW : ' + s.leansLeftW);
+        post('leansLeftL : ' + s.leansLeftL);
+        post('leansheightL : ' + s.leansheightL);
 
-  //   window.addEventListener('message', onWindowMessage);
+        post('leansRightW : ' + s.leansRightW);
+        post('leansRightL : ' + s.leansRightL);
+        post('leansheightR : ' + s.leansheightR);
 
-  //   return () => {
-  //     window.removeEventListener('message', onWindowMessage);
-  //   };
-  // }, [events]);
+        // 3) Apply second set for left leans, persist then send
+        const secondSet = {
+          leansLeftW: (e.leansLeftW2 ?? '10'),
+          leansLeftL: (e.leansLeftL2 ?? '40'),
+          leansheightL: (e.leansheightL2 ?? '6'),
+        };
+        patchEventValues(secondSet);
+        const s2 = useStore.getState().events;
+        post('leansLeftW : ' + s2.leansLeftW);
+        post('leansLeftL : ' + s2.leansLeftL);
+        post('leansheightL : ' + s2.leansheightL);
 
+        // Continue with the rest
+        post('storageFeetL : ' + s2.storageFeetL);
+
+        // Skipping walls per your preference
+        // post('Rsidewalls : ' + (s2.Rsidewalls ?? 'Open'));
+        // post('Rbackwalls : ' + (s2.Rbackwalls ?? 'Open'));
+        // post('Rfontwalls : ' + (s2.Rfontwalls ?? 'Open'));
+
+        setTimeout(() => {
+          post('barn_heightS');
+        }, 1000);
+      }
+    };
+
+    window.addEventListener('message', onWindowMessage);
+
+    return () => {
+      window.removeEventListener('message', onWindowMessage);
+    };
+  }, [events]);
+
+ 
   return (
     <div className="relative w-full h-full">
-      {/* {isLoading && (
+      {isLoading && (
         <div className="absolute inset-0 z-10 flex items-center justify-center bg-[#E6E6E6]">
           <span className="text-gray-700">Loading…</span>
         </div>
-      )} */}
+      )}
       <iframe
         ref={iframeRef}
         src={src}

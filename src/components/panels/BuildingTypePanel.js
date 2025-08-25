@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import useStore from '../../store/useStore';
+import { sendMessageToPlayCanvas } from '../../utils/configuratorBridge';
 
 
 const BuildingTypePanel = (
@@ -13,20 +14,21 @@ const BuildingTypePanel = (
   }
 ) => {
 
-  
+
   const [selectedCategory, setSelectedCategory] = useState(null);
   const setSelectedBuilding = useStore(state => state.setSelectedBuilding);
   const setEvents = useStore(state => state.setEvents);
+  const patchEventValues = useStore(state => state.patchEventValues);
   const events = useStore(state => state.events);
   // Categories cache from store
   const categoriesFromStore = useStore(state => state.categories);
   const setCategoriesInStore = useStore(state => state.setCategories);
 
 
-   // API-driven categories
-   const [categories, setCategories] = useState([]);
-   
-  
+  // API-driven categories
+  const [categories, setCategories] = useState([]);
+
+
   // Refs to measure dynamic content heights for smooth accordion animation
   const contentRefs = useRef({}); // animated wrapper
   const innerContentRefs = useRef({}); // actual content to measure
@@ -78,7 +80,15 @@ const BuildingTypePanel = (
       cancelAnimationFrame(raf);
     };
   }, [expandedCategory, selectedItem]);
- 
+
+  useEffect(() => {
+    const unsub = useStore.subscribe(
+      (state) => state.events,
+      (ev) => console.log('[events changed]', ev)
+    );
+    return unsub;
+  }, []);
+
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     const initFromData = (data) => {
@@ -105,8 +115,9 @@ const BuildingTypePanel = (
           });
           // Events are provided at category level as an array with a single object
           const rawEvents = Array.isArray(targetCategory.events) ? (targetCategory.events[0] || {}) : {};
-          console.log("Raw Events", rawEvents);
           setEvents(rawEvents);
+          // Populate default values into events
+
           // UI state: open/highlight the category
           setSelectedCategory(targetCategory.id);
         } else {
@@ -120,8 +131,6 @@ const BuildingTypePanel = (
       try {
         const res = await fetch('http://localhost:3001/api/building/categories_items');
         const data = await res.json();
-        console.log("API RUN AGAIN")
-        console.log(data);
         // Persist to store and local
         setCategoriesInStore(Array.isArray(data) ? data : []);
         initFromData(data);
@@ -296,14 +305,31 @@ const BuildingTypePanel = (
       categoryName: category?.name,
     });
     // On card selection, set events from the category (single object inside array)
-    // const rawEvents = Array.isArray(category?.events) ? (category.events[0] || {}) : {};
-    // setEvents( "Raw Events" ,  rawEvents);
-    console.log( "Current Events" ,  events)
+    const rawEvents = Array.isArray(category?.events) ? (category.events[0] || {}) : {};
+    setEvents(rawEvents);
+    // Populate default values into events on selection
+    patchEventValues({
+      Carportsbuilding: null,
+      barn_height: 10,
+      barn_Width: 24,
+      barn_Length: 40,
+      leansLeftW: 6,
+      leansLeftL: 20,
+      leansheightL: 6,
+      leansRightW: 10,
+      leansRightL: 40,
+      leansheightR: 6,
+      storageFeetL: 4,
+      barn_heightS: null,
+    });
+
+    console.log("events", useStore.getState().events);
+    
   };
 
   const handle_open_size_panel = () => {
     setActiveIndex(1);
-    setActivePanelItem({ id: 'size'});
+    setActivePanelItem({ id: 'size' });
   };
 
   return (
@@ -317,7 +343,7 @@ const BuildingTypePanel = (
           Select a buildings style from pre-designed building sets
         </p>
       </div>
-      
+
       <div className="p-1 sm:p-2 px-2 sm:px-4 space-y-1 sm:space-y-2">
         {categories.map((category, index) => {
           const isExpanded = expandedCategory === category.id;
@@ -330,7 +356,7 @@ const BuildingTypePanel = (
               key={category.id}
               className={`
                 rounded-lg border transition-all duration-200 overflow-hidden bg-transparent
-                ${(isExpanded )
+                ${(isExpanded)
                   ? 'border-[#FF1717]'
                   : 'border-[#07223D]'
                 }
@@ -349,7 +375,7 @@ const BuildingTypePanel = (
                   `}>
                     {category.name?.replace(/_/g, ' ')}
                   </span>
-                  {( hasSelectedChild) && (
+                  {(hasSelectedChild) && (
                     <span className="border border-[#FF1717] text-[#FF1717] text-[10px] sm:text-xs px-1 sm:px-1.5 py-0.5 rounded-[4px] font-medium">
                       selected
                     </span>
@@ -439,10 +465,10 @@ const BuildingTypePanel = (
                             src={item.image}
                             alt={item.name}
                             className="h-full object-contain"
-                            // onError={(e) => {
-                            //   e.target.onerror = null;
-                            //   e.target.src = 'https://via.placeholder.com/200x100?text=Building';
-                            // }}
+                          // onError={(e) => {
+                          //   e.target.onerror = null;
+                          //   e.target.src = 'https://via.placeholder.com/200x100?text=Building';
+                          // }}
                           />
                         </div>
 

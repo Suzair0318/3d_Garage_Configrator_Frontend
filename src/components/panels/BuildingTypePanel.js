@@ -24,10 +24,8 @@ const BuildingTypePanel = (
   const categoriesFromStore = useStore(state => state.categories);
   const setCategoriesInStore = useStore(state => state.setCategories);
 
-
   // API-driven categories
   const [categories, setCategories] = useState([]);
-
 
   // Refs to measure dynamic content heights for smooth accordion animation
   const contentRefs = useRef({}); // animated wrapper
@@ -39,7 +37,6 @@ const BuildingTypePanel = (
     window.addEventListener('resize', onResize);
     return () => window.removeEventListener('resize', onResize);
   }, []);
-
 
   // Keep outer animated maxHeight in sync with inner content size while expanded
   useEffect(() => {
@@ -148,6 +145,8 @@ const BuildingTypePanel = (
     }
   }, []);
 
+
+ 
 
   // const categories = [
   //   {
@@ -323,8 +322,57 @@ const BuildingTypePanel = (
       barn_heightS: null,
     });
 
-    console.log("events", useStore.getState().events);
-    
+    // Send merged events to the PlayCanvas iframe using the reusable bridge
+    const latestEvents = useStore.getState().events || {};
+    console.log('events', latestEvents);
+
+    // Use the bridge directly (imported at top)
+    const post = (payload) => sendMessageToPlayCanvas(payload);
+
+    // Helper to pull from latest events and optionally skip empties
+    const e = latestEvents || {};
+    const vOr = (k) => {
+      const v = e[k];
+      return v;
+    };
+
+    // 1) Trigger base build (exactly like in ConfiguratorIframe)
+    post('Carportsbuilding');
+
+    // 2) Primary set (keep spaces around colon to match receiving side)
+    const sendKV = (k) => {
+      const v = vOr(k);
+      if (v === '' || v === undefined || v === null) return; // avoid empty payloads
+      post(`${k} : ${v}`);
+    };
+
+    sendKV('barn_height');
+    sendKV('barn_Width');
+    sendKV('barn_Length');
+
+    sendKV('leansLeftW');
+    sendKV('leansLeftL');
+    sendKV('leansheightL');
+
+    sendKV('leansRightW');
+    sendKV('leansRightL');
+    sendKV('leansheightR');
+
+    // 3) Left leans updated (second set)
+    sendKV('leansLeftW2');
+    sendKV('leansLeftL2');
+    sendKV('leansheightL2');
+
+    // 4) Storage and walls
+    sendKV('storageFeetL');
+    post('Rsidewalls : Open');
+    post('Rbackwalls : Open');
+    post('Rfontwalls : Open');
+
+    // 5) Final delayed trigger
+    setTimeout(() => {
+      post('barn_heightS');
+    }, 1000);
   };
 
   const handle_open_size_panel = () => {

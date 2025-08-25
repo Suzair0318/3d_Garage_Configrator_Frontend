@@ -16,6 +16,7 @@ export default function ConfiguratorIframe({ src = "https://playcanv.as/e/p/iUeW
   const setEvents = useStore((s) => s.setEvents);
   const patchEventValues = useStore((s) => s.patchEventValues);
 
+
   // Fetch categories + events and pick the first category's events
   useEffect(() => {
     let abort = false;
@@ -24,6 +25,7 @@ export default function ConfiguratorIframe({ src = "https://playcanv.as/e/p/iUeW
         const res = await fetch('http://localhost:3001/api/building/categories_items');
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
+        console.log("API", data)
         if (abort) return;
         const first = Array.isArray(data) ? data[0] : null
         const evts = first && Array.isArray(first.events) ? first.events : [];
@@ -37,7 +39,6 @@ export default function ConfiguratorIframe({ src = "https://playcanv.as/e/p/iUeW
     return () => { abort = true; };
   }, []);
 
-
   useEffect(() => {
     // Browser-only
     if (typeof window === 'undefined') return;
@@ -49,15 +50,13 @@ export default function ConfiguratorIframe({ src = "https://playcanv.as/e/p/iUeW
       const data = event.data;
       if (data === 'app:ready1') {
         setIsLoading(false);
-
         const app = iframeRef.current;
         if (!app) return;
         const post = (payload) => sendMessageToPlayCanvas(payload);
 
-        // API-driven message sequence (persist to Zustand first, then send)
-        const e = (events && typeof events === 'object') ? events : {};
-        const def = {
-          barn_height: 10,
+        patchEventValues({
+          Carportsbuilding: null,
+          barn_height : 10,
           barn_Width: 24,
           barn_Length: 40,
           leansLeftW: 6,
@@ -67,66 +66,51 @@ export default function ConfiguratorIframe({ src = "https://playcanv.as/e/p/iUeW
           leansRightL: 40,
           leansheightR: 6,
           storageFeetL: 4,
-        };
-        const vOrDef = (k) => {
-          const v = e[k];
-          return (v === '' || v === undefined || v === null) ? def[k] : v;
-        };
+          barn_heightS: null,
+        });
 
-        // 1) First patch store with the primary set
-        const primaryPatch = {
-          barn_height: vOrDef('barn_height'),
-          barn_Width: vOrDef('barn_Width'),
-          barn_Length: vOrDef('barn_Length'),
-          leansLeftW: vOrDef('leansLeftW'),
-          leansLeftL: vOrDef('leansLeftL'),
-          leansheightL: vOrDef('leansheightL'),
-          leansRightW: vOrDef('leansRightW'),
-          leansRightL: vOrDef('leansRightL'),
-          leansheightR: vOrDef('leansheightR'),
-          storageFeetL: vOrDef('storageFeetL'),
-        };
-        patchEventValues(primaryPatch);
-      
-
-        // 2) Read back from store and send in desired order/format
         const s = useStore.getState().events;
-        post('Carportsbuilding');
-        post('barn_height : ' + s.barn_height);
-        post('barn_Width : ' + s.barn_Width);
-        post('barn_Length : ' + s.barn_Length);
-
-        post('leansLeftW : ' + s.leansLeftW);
-        post('leansLeftL : ' + s.leansLeftL);
-        post('leansheightL : ' + s.leansheightL);
-
-        post('leansRightW : ' + s.leansRightW);
-        post('leansRightL : ' + s.leansRightL);
-        post('leansheightR : ' + s.leansheightR);
-
-        // 3) Apply second set for left leans, persist then send
-        const secondSet = {
-          leansLeftW: (e.leansLeftW2 ?? '10'),
-          leansLeftL: (e.leansLeftL2 ?? '40'),
-          leansheightL: (e.leansheightL2 ?? '6'),
+  
+        // Helper to pull value with default and ignore empty strings/null/undefined
+        const e = s || {};
+        const vOr = (k) => {
+          const v = e[k];
+          return v;
         };
-        patchEventValues(secondSet);
-        const s2 = useStore.getState().events;
-        post('leansLeftW : ' + s2.leansLeftW);
-        post('leansLeftL : ' + s2.leansLeftL);
-        post('leansheightL : ' + s2.leansheightL);
 
-        // Continue with the rest
-        post('storageFeetL : ' + s2.storageFeetL);
+        // 1) Trigger base build
+        post('Carportsbuilding');
 
-        // Skipping walls per your preference
-        // post('Rsidewalls : ' + (s2.Rsidewalls ?? 'Open'));
-        // post('Rbackwalls : ' + (s2.Rbackwalls ?? 'Open'));
-        // post('Rfontwalls : ' + (s2.Rfontwalls ?? 'Open'));
+        // 2) Primary set
+        post('barn_height : ' + vOr('barn_height', 10));
+        post('barn_Width : ' + vOr('barn_Width', 24));
+        post('barn_Length : ' + vOr('barn_Length', 40));
 
+        post('leansLeftW : ' + vOr('leansLeftW', 6));
+        post('leansLeftL : ' + vOr('leansLeftL', 20));
+        post('leansheightL : ' + vOr('leansheightL', 6));
+
+        post('leansRightW : ' + vOr('leansRightW', 10));
+        post('leansRightL : ' + vOr('leansRightL', 40));
+        post('leansheightR : ' + vOr('leansheightR', 6));
+
+        // 3) Left leans updated (second set)
+        post('leansLeftW : ' + vOr('leansLeftW2', 10));
+        post('leansLeftL : ' + vOr('leansLeftL2', 40));
+        post('leansheightL : ' + vOr('leansheightL2', 6));
+
+        // 4) Storage and walls
+        post('storageFeetL : ' + vOr('storageFeetL', 4));
+
+        post('Rsidewalls : ' + 'Open');
+        post('Rbackwalls : ' + 'Open');
+        post('Rfontwalls : ' + 'Open');
+
+        // 5) Final delayed trigger
         setTimeout(() => {
           post('barn_heightS');
         }, 1000);
+ 
       }
     };
 
@@ -135,16 +119,16 @@ export default function ConfiguratorIframe({ src = "https://playcanv.as/e/p/iUeW
     return () => {
       window.removeEventListener('message', onWindowMessage);
     };
-  }, [events]);
+  }, []);
 
  
   return (
     <div className="relative w-full h-full">
-      {isLoading && (
+       {isLoading && (
         <div className="absolute inset-0 z-10 flex items-center justify-center bg-[#E6E6E6]">
           <span className="text-gray-700">Loading…</span>
         </div>
-      )}
+      )} 
       <iframe
         ref={iframeRef}
         src={src}

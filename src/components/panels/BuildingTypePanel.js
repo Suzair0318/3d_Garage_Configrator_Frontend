@@ -1,6 +1,53 @@
 import React, { useState, useEffect, useRef } from 'react';
 import useStore from '../../store/useStore';
 import { sendMessageToPlayCanvas } from '../../utils/configuratorBridge';
+import { BUILDING_PRESETS } from '../central_js_file/building';
+
+// Default fallback order if a preset doesn't specify its own order
+const DEFAULT_EVENT_ORDER = [
+  'enabledAllBuilding',
+  'barn_heightS',
+  'Carportsbuilding',
+  'barn_height',
+  'barn_Width',
+  'barn_Length',
+  'trimColor',
+  'roofColor',
+  'backstorage',
+  'leftstorage',
+  'fontwalls',
+  'backwalls',
+  'leftwalls',
+  'rightwalls',
+  'rightleansFalse',
+  'leftleansFalse',
+];
+
+// Helper to merge, persist, and post values in correct order
+function applyPresetAndPost({ basePreset}) {
+  if (!basePreset) return;
+  // Strip `order` out so it is NOT saved in the store; ignore `overrides` per request
+  const { order: presetOrder, ...presetValues } = basePreset;
+  const merged = { ...presetValues };
+  // Persist into global store (events only)
+  useStore.setState({ events: merged });
+
+
+
+  // Determine order (preset-specific or default) for posting only
+  const order = Array.isArray(presetOrder) && presetOrder.length
+    ? presetOrder
+    : DEFAULT_EVENT_ORDER;
+
+  for (const key of order) {
+    const value = merged[key];
+    if (value === null) {
+      sendMessageToPlayCanvas(key);
+    } else if (value !== undefined && value !== '') {
+      sendMessageToPlayCanvas(`${key} : ${value}`);
+    }
+  }
+}
 
 
 const BuildingTypePanel = (
@@ -302,68 +349,19 @@ const BuildingTypePanel = (
       categoryId: category?.id,
       categoryName: category?.name,
     });
-    // On card selection, set events from the category (single object inside array)
-    const rawEvents = Array.isArray(category?.events) ? (category.events[0] || {}) : {};
-    setEvents(rawEvents);
-    // Populate default values into events on selection
-    patchEventValues({
-      enabledAllBuilding: null,
-      barn_heightS: null,
-      Carportsbuilding: null,
-      barn_height : 10,
-      barn_Width: 24,
-      barn_Length: 40, 
-      trimColor : '#832c00',
-      roofColor : '#832c00',
-      backstorage : 'disabled',
-      leftstorage : 'disabled',
-      fontwalls : 'Open',
-      backwalls : 'Open',
-      leftwalls : 'Open',
-      rightwalls : 'Open',
-      rightleansFalse : null,
-      leftleansFalse : null,  
-    });
 
-    // Send merged events to the PlayCanvas iframe using the reusable bridge
-    const latestEvents = useStore.getState().events || {};
-    console.log('events', latestEvents);
-
+     // On card selection, set events from the category (single object inside array)
+     const rawEvents = Array.isArray(category?.events) ? (category.events[0] || {}) : {};
+     setEvents(rawEvents);
     // Use the bridge directly (imported at top)
-    const post = (payload) => sendMessageToPlayCanvas(payload);
+    
 
-    // Helper to pull from latest events and optionally skip empties
-    const e = latestEvents || {};
-
-    // 2) Pot values in required order using a loop
-    const orderedKeys = [
-      'enabledAllBuilding',
-      'barn_heightS',
-      'Carportsbuilding',
-      'barn_height',
-      'barn_Width',
-      'barn_Length',
-      'trimColor',
-      'roofColor',
-      'backstorage',
-      'leftstorage',
-      'fontwalls',
-      'backwalls',
-      'leftwalls',
-      'rightwalls',
-      'rightleansFalse',
-      'leftleansFalse',
-    ];
-
-
-    for (const key of orderedKeys) {
-      const value = e[key];
-      if (value === null) {
-        post(`${key}`);
-      } else if (value !== undefined && value !== '') {
-        post(`${key} : ${value}`);
-      }
-    }
+    // Compute a stable key for presets: prefer slug/id, fallback to normalized name
+    const presetKey = item.name;
+    const basePreset = BUILDING_PRESETS[presetKey];
+    
+    // Apply preset with category overrides and post in the correct order
+    applyPresetAndPost({ basePreset});
 
   };
 

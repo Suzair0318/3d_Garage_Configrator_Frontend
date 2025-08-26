@@ -54,8 +54,6 @@ export default function ConfiguratorIframe({ src = "https://playcanv.as/e/p/iUeW
         if (!app) return;
         const post = (payload) => sendMessageToPlayCanvas(payload);
 
-      
-
         patchEventValues({
           enabledAllBuilding: null,
           barn_heightS: null,

@@ -1,0 +1,40 @@
+// Map by stable key (slug/id/name). Each preset may define its own `order`.
+export const BUILDING_PRESETS = {
+  'Standard Carport': {
+    order: [
+      'enabledAllBuilding',
+      'Carportsbuilding',
+      'barn_Width',
+      'barn_Length',
+      'barn_height',
+      'trimColor',
+      'roofColor',
+      'fontwalls',
+      'backwalls',
+      'leftwalls',
+      'rightwalls',
+      'barn_heightS',
+      'rightleansFalse',
+      'leftleansFalse',
+      'backstorage',
+      'leftstorage',
+    ],
+    enabledAllBuilding: null,
+    barn_heightS: null,
+    Carportsbuilding: null,
+    barn_height: 10,
+    barn_Width: 24,
+    barn_Length: 40,
+    trimColor: '#832c00',
+    roofColor: '#832c00',
+    backstorage: 'disabled',
+    leftstorage: 'disabled',
+    fontwalls: 'Open',
+    backwalls: 'Open',
+    leftwalls: 'Open',
+    rightwalls: 'Open',
+    rightleansFalse: null,
+    leftleansFalse: null,
+  }
+
+};

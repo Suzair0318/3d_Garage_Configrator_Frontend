@@ -17,22 +17,22 @@ export default function ConfiguratorIframe({ src = "https://playcanv.as/e/p/iUeW
   const patchEventValues = useStore((s) => s.patchEventValues);
 
 
-  // Fetch categories + events and pick the first category's events
+  // Fetch global events payload and store into Zustand
   useEffect(() => {
     let abort = false;
     const fetchEvents = async () => {
       try {
-        const res = await fetch('http://localhost:3001/api/building/categories_items');
+        const res = await fetch('http://localhost:3001/api/building/events');
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
-        console.log("API", data)
+        console.log("API /events", data);
         if (abort) return;
-        const first = Array.isArray(data) ? data[0] : null
-        const evts = first && Array.isArray(first.events) ? first.events : [];
-        setEvents(evts[0] || {});
+        const arr = data && Array.isArray(data.events) ? data.events : [];
+        const first = arr[0] || {};
+        setEvents(first);
       } catch (e) {
         console.error('Failed to fetch events:', e);
-        setEvents([]);
+        setEvents({});
       }
     };
     fetchEvents();
@@ -54,63 +54,61 @@ export default function ConfiguratorIframe({ src = "https://playcanv.as/e/p/iUeW
         if (!app) return;
         const post = (payload) => sendMessageToPlayCanvas(payload);
 
+      
+
         patchEventValues({
+          enabledAllBuilding: null,
+          barn_heightS: null,
           Carportsbuilding: null,
           barn_height : 10,
           barn_Width: 24,
-          barn_Length: 40,
-          leansLeftW: 6,
-          leansLeftL: 20,
-          leansheightL: 6,
-          leansRightW: 10,
-          leansRightL: 40,
-          leansheightR: 6,
-          storageFeetL: 4,
-          barn_heightS: null,
+          barn_Length: 40, 
+          trimColor : '#832c00',
+          roofColor : '#832c00',
+          backstorage : 'disabled',
+          leftstorage : 'disabled',
+          fontwalls : 'Open',
+          backwalls : 'Open',
+          leftwalls : 'Open',
+          rightwalls : 'Open',
+          rightleansFalse : null,
+          leftleansFalse : null,  
         });
 
         const s = useStore.getState().events;
   
-        // Helper to pull value with default and ignore empty strings/null/undefined
         const e = s || {};
-        const vOr = (k) => {
-          const v = e[k];
-          return v;
-        };
+       console.log('events', e);
 
-        // 1) Trigger base build
-        post('Carportsbuilding');
+        // 2) Post values in required order using a loop
+        const orderedKeys = [
+          'enabledAllBuilding',
+          'barn_heightS',
+          'Carportsbuilding',
+          'barn_height',
+          'barn_Width',
+          'barn_Length',
+          'trimColor',
+          'roofColor',
+          'backstorage',
+          'leftstorage',
+          'fontwalls',
+          'backwalls',
+          'leftwalls',
+          'rightwalls',
+          'rightleansFalse',
+          'leftleansFalse',
+        ];
 
-        // 2) Primary set
-        post('barn_height : ' + vOr('barn_height', 10));
-        post('barn_Width : ' + vOr('barn_Width', 24));
-        post('barn_Length : ' + vOr('barn_Length', 40));
+        for (const key of orderedKeys) {
+          const value = e[key];
+          if (value === null) {
+            post(`${key}`);
+          } else if (value !== undefined && value !== '') {
+            post(`${key} : ${value}`);
+          }
+        }
 
-        post('leansLeftW : ' + vOr('leansLeftW', 6));
-        post('leansLeftL : ' + vOr('leansLeftL', 20));
-        post('leansheightL : ' + vOr('leansheightL', 6));
-
-        post('leansRightW : ' + vOr('leansRightW', 10));
-        post('leansRightL : ' + vOr('leansRightL', 40));
-        post('leansheightR : ' + vOr('leansheightR', 6));
-
-        // 3) Left leans updated (second set)
-        post('leansLeftW : ' + vOr('leansLeftW2', 10));
-        post('leansLeftL : ' + vOr('leansLeftL2', 40));
-        post('leansheightL : ' + vOr('leansheightL2', 6));
-
-        // 4) Storage and walls
-        post('storageFeetL : ' + vOr('storageFeetL', 4));
-
-        post('Rsidewalls : ' + 'Open');
-        post('Rbackwalls : ' + 'Open');
-        post('Rfontwalls : ' + 'Open');
-
-        // 5) Final delayed trigger
-        setTimeout(() => {
-          post('barn_heightS');
-        }, 1000);
- 
       }
     };
 

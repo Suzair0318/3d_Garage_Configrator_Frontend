@@ -131,6 +131,7 @@ const BuildingTypePanel = (
         // Persist to store and local
         setCategoriesInStore(Array.isArray(data) ? data : []);
         initFromData(data);
+        console.log('categories', data);
       } catch (e) {
         console.error('Failed to load categories', e);
       }
@@ -145,8 +146,6 @@ const BuildingTypePanel = (
     }
   }, []);
 
-
- 
 
   // const categories = [
   //   {
@@ -308,18 +307,22 @@ const BuildingTypePanel = (
     setEvents(rawEvents);
     // Populate default values into events on selection
     patchEventValues({
-      Carportsbuilding: null,
-      barn_height: 10,
-      barn_Width: 24,
-      barn_Length: 40,
-      leansLeftW: 6,
-      leansLeftL: 20,
-      leansheightL: 6,
-      leansRightW: 10,
-      leansRightL: 40,
-      leansheightR: 6,
-      storageFeetL: 4,
+      enabledAllBuilding: null,
       barn_heightS: null,
+      Carportsbuilding: null,
+      barn_height : 10,
+      barn_Width: 24,
+      barn_Length: 40, 
+      trimColor : '#832c00',
+      roofColor : '#832c00',
+      backstorage : 'disabled',
+      leftstorage : 'disabled',
+      fontwalls : 'Open',
+      backwalls : 'Open',
+      leftwalls : 'Open',
+      rightwalls : 'Open',
+      rightleansFalse : null,
+      leftleansFalse : null,  
     });
 
     // Send merged events to the PlayCanvas iframe using the reusable bridge
@@ -331,48 +334,37 @@ const BuildingTypePanel = (
 
     // Helper to pull from latest events and optionally skip empties
     const e = latestEvents || {};
-    const vOr = (k) => {
-      const v = e[k];
-      return v;
-    };
 
-    // 1) Trigger base build (exactly like in ConfiguratorIframe)
-    post('Carportsbuilding');
+    // 2) Pot values in required order using a loop
+    const orderedKeys = [
+      'enabledAllBuilding',
+      'barn_heightS',
+      'Carportsbuilding',
+      'barn_height',
+      'barn_Width',
+      'barn_Length',
+      'trimColor',
+      'roofColor',
+      'backstorage',
+      'leftstorage',
+      'fontwalls',
+      'backwalls',
+      'leftwalls',
+      'rightwalls',
+      'rightleansFalse',
+      'leftleansFalse',
+    ];
 
-    // 2) Primary set (keep spaces around colon to match receiving side)
-    const sendKV = (k) => {
-      const v = vOr(k);
-      if (v === '' || v === undefined || v === null) return; // avoid empty payloads
-      post(`${k} : ${v}`);
-    };
 
-    sendKV('barn_height');
-    sendKV('barn_Width');
-    sendKV('barn_Length');
+    for (const key of orderedKeys) {
+      const value = e[key];
+      if (value === null) {
+        post(`${key}`);
+      } else if (value !== undefined && value !== '') {
+        post(`${key} : ${value}`);
+      }
+    }
 
-    sendKV('leansLeftW');
-    sendKV('leansLeftL');
-    sendKV('leansheightL');
-
-    sendKV('leansRightW');
-    sendKV('leansRightL');
-    sendKV('leansheightR');
-
-    // 3) Left leans updated (second set)
-    sendKV('leansLeftW2');
-    sendKV('leansLeftL2');
-    sendKV('leansheightL2');
-
-    // 4) Storage and walls
-    sendKV('storageFeetL');
-    post('Rsidewalls : Open');
-    post('Rbackwalls : Open');
-    post('Rfontwalls : Open');
-
-    // 5) Final delayed trigger
-    setTimeout(() => {
-      post('barn_heightS');
-    }, 1000);
   };
 
   const handle_open_size_panel = () => {

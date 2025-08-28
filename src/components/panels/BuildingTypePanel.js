@@ -1,46 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
 import useStore from '../../store/useStore';
 import { sendMessageToPlayCanvas } from '../../utils/configuratorBridge';
-import { BUILDING_PRESETS } from '../central_js_file/building';
-
-// Default fallback order if a preset doesn't specify its own order
-const DEFAULT_EVENT_ORDER = [
-  'enabledAllBuilding',
-  'barn_heightS',
-  'Carportsbuilding',
-  'barn_height',
-  'barn_Width',
-  'barn_Length',
-  'trimColor',
-  'roofColor',
-  'backstorage',
-  'leftstorage',
-  'fontwalls',
-  'backwalls',
-  'leftwalls',
-  'rightwalls',
-  'rightleansFalse',
-  'leftleansFalse',
-];
-
-// Helper to merge, persist, and post values in correct order
-function applyPresetAndPost({ basePreset}) {
-  if (!basePreset) return;
-  // Strip `order` out so it is NOT saved in the store; ignore `overrides` per request
-  const { order: presetOrder, ...presetValues } = basePreset;
-  const merged = { ...presetValues };
-  // Persist into global store (events only)
-  useStore.setState({ events: merged });
 
 
 
-  // Determine order (preset-specific or default) for posting only
-  const order = Array.isArray(presetOrder) && presetOrder.length
-    ? presetOrder
-    : DEFAULT_EVENT_ORDER;
-
-  for (const key of order) {
-    const value = merged[key];
+// Helper to apply an events object (from API) and post in its defined order
+function applyEventsAndPost(eventsObj) {
+  if (!eventsObj || typeof eventsObj !== 'object') return;
+  const { order } = eventsObj || {};
+  const postOrder = Array.isArray(order) && order.length ? order : [];
+  for (const key of postOrder) {
+    const value = eventsObj[key];
     if (value === null) {
       sendMessageToPlayCanvas(key);
     } else if (value !== undefined && value !== '') {
@@ -48,7 +18,6 @@ function applyPresetAndPost({ basePreset}) {
     }
   }
 }
-
 
 const BuildingTypePanel = (
   {
@@ -64,9 +33,7 @@ const BuildingTypePanel = (
 
   const [selectedCategory, setSelectedCategory] = useState(null);
   const setSelectedBuilding = useStore(state => state.setSelectedBuilding);
-  const setEvents = useStore(state => state.setEvents);
-  const patchEventValues = useStore(state => state.patchEventValues);
-  const events = useStore(state => state.events);
+ 
   // Categories cache from store
   const categoriesFromStore = useStore(state => state.categories);
   const setCategoriesInStore = useStore(state => state.setCategories);
@@ -79,6 +46,7 @@ const BuildingTypePanel = (
   const innerContentRefs = useRef({}); // actual content to measure
   // Force re-render on resize so measured heights stay accurate on responsive breakpoints
   const [, forceRerender] = useState(0);
+
   useEffect(() => {
     const onResize = () => forceRerender(v => v + 1);
     window.addEventListener('resize', onResize);
@@ -125,13 +93,7 @@ const BuildingTypePanel = (
     };
   }, [expandedCategory, selectedItem]);
 
-  useEffect(() => {
-    const unsub = useStore.subscribe(
-      (state) => state.events,
-      (ev) => console.log('[events changed]', ev)
-    );
-    return unsub;
-  }, []);
+  // No global events subscription; events are kept local in this component now
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
@@ -157,16 +119,18 @@ const BuildingTypePanel = (
             categoryId: targetCategory.id,
             categoryName: targetCategory.name,
           });
-          // Events are provided at category level as an array with a single object
-          const rawEvents = Array.isArray(targetCategory.events) ? (targetCategory.events[0] || {}) : {};
-          setEvents(rawEvents);
+          // Events are provided at item level as an array with a single object
+          const rawEvents = Array.isArray(targetItem.events) ? (targetItem.events[0] || {}) : {};
+          // setEvents(rawEvents);
+          // Apply these events immediately
+          applyEventsAndPost(rawEvents);
           // Populate default values into events
 
           // UI state: open/highlight the category
           setSelectedCategory(targetCategory.id);
         } else {
           // Fallback: clear events if no items
-          setEvents({});
+         // setEvents({});
         }
       }
     };
@@ -175,20 +139,33 @@ const BuildingTypePanel = (
       try {
         const res = await fetch('http://localhost:3001/api/building/categories_items');
         const data = await res.json();
+        const safe = Array.isArray(data) ? data : [];
+        // Cache in sessionStorage to avoid re-fetch within the session
+        try {
+          sessionStorage.setItem('categories_items_v1', JSON.stringify(safe));
+        } catch (_) {}
         // Persist to store and local
-        setCategoriesInStore(Array.isArray(data) ? data : []);
-        initFromData(data);
-        console.log('categories', data);
+        setCategoriesInStore(safe);
+        initFromData(safe);
+        console.log('categories', safe);
       } catch (e) {
         console.error('Failed to load categories', e);
       }
     };
 
-    if (Array.isArray(categoriesFromStore) && categoriesFromStore.length > 0) {
-      // Use cached categories
+    // Prefer session cache first, then store cache, else fetch
+    let sessionCached = null;
+    try {
+      const raw = sessionStorage.getItem('categories_items_v1');
+      if (raw) sessionCached = JSON.parse(raw);
+    } catch (_) {}
+
+    if (Array.isArray(sessionCached) && sessionCached.length > 0) {
+      setCategoriesInStore(sessionCached);
+      initFromData(sessionCached);
+    } else if (Array.isArray(categoriesFromStore) && categoriesFromStore.length > 0) {
       initFromData(categoriesFromStore);
     } else {
-      // Fetch once when cache is empty
       load();
     }
   }, []);
@@ -350,18 +327,11 @@ const BuildingTypePanel = (
       categoryName: category?.name,
     });
 
-     // On card selection, set events from the category (single object inside array)
-     const rawEvents = Array.isArray(category?.events) ? (category.events[0] || {}) : {};
-     setEvents(rawEvents);
-    // Use the bridge directly (imported at top)
-    
-
-    // Compute a stable key for presets: prefer slug/id, fallback to normalized name
-    const presetKey = item.name;
-    const basePreset = BUILDING_PRESETS[presetKey];
-    
-    // Apply preset with category overrides and post in the correct order
-    applyPresetAndPost({ basePreset});
+     // On card selection, set events from the item (single object inside array)
+     const rawEvents = Array.isArray(item?.events) ? (item.events[0] || {}) : {};
+    //  setEvents(rawEvents);
+     // Apply these events immediately
+     applyEventsAndPost(rawEvents);
 
   };
 

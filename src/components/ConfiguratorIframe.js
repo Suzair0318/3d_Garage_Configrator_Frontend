@@ -6,39 +6,6 @@ export default function ConfiguratorIframe({ src = "https://playcanv.as/e/p/iUeW
   const iframeRef = useRef(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // const sendMessageToPlayCanvas = (message) => {
-  //   // Use global bridge so any module can also send messages
-  //   return sendToConfigurator(message);
-  // };
-
-  // Events fetched from backend (simple array) stored in Zustand
-  const events = useStore((s) => s.events);
-  const setEvents = useStore((s) => s.setEvents);
-  const patchEventValues = useStore((s) => s.patchEventValues);
-
-
-  // Fetch global events payload and store into Zustand
-  useEffect(() => {
-    let abort = false;
-    const fetchEvents = async () => {
-      try {
-        const res = await fetch('http://localhost:3001/api/building/events');
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const data = await res.json();
-        console.log("API /events", data);
-        if (abort) return;
-        const arr = data && Array.isArray(data.events) ? data.events : [];
-        const first = arr[0] || {};
-        setEvents(first);
-      } catch (e) {
-        console.error('Failed to fetch events:', e);
-        setEvents({});
-      }
-    };
-    fetchEvents();
-    return () => { abort = true; };
-  }, []);
-
   useEffect(() => {
     // Browser-only
     if (typeof window === 'undefined') return;
@@ -54,7 +21,7 @@ export default function ConfiguratorIframe({ src = "https://playcanv.as/e/p/iUeW
         if (!app) return;
         const post = (payload) => sendMessageToPlayCanvas(payload);
 
-        patchEventValues({
+        const d = {
           enabledAllBuilding: null,
           barn_heightS: null,
           Carportsbuilding: null,
@@ -71,13 +38,9 @@ export default function ConfiguratorIframe({ src = "https://playcanv.as/e/p/iUeW
           rightwalls : 'Open',
           rightleansFalse : null,
           leftleansFalse : null,  
-        });
+        };
 
-        const s = useStore.getState().events;
-  
-        const e = s || {};
-       console.log('events', e);
-
+        
         // 2) Post values in required order using a loop
         const orderedKeys = [
           'enabledAllBuilding',
@@ -99,7 +62,7 @@ export default function ConfiguratorIframe({ src = "https://playcanv.as/e/p/iUeW
         ];
 
         for (const key of orderedKeys) {
-          const value = e[key];
+          const value = d[key];
           if (value === null) {
             post(`${key}`);
           } else if (value !== undefined && value !== '') {

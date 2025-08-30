@@ -2,8 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import useStore from '../../store/useStore';
 import { sendMessageToPlayCanvas } from '../../utils/configuratorBridge';
 
-
-
 // Helper to apply an events object (from API) and post in its defined order
 function applyEventsAndPost(eventsObj) {
   if (!eventsObj || typeof eventsObj !== 'object') return;
@@ -30,10 +28,9 @@ const BuildingTypePanel = (
   }
 ) => {
 
-
   const [selectedCategory, setSelectedCategory] = useState(null);
   const setSelectedBuilding = useStore(state => state.setSelectedBuilding);
- 
+
   // Categories cache from store
   const categoriesFromStore = useStore(state => state.categories);
   const setCategoriesInStore = useStore(state => state.setCategories);
@@ -130,7 +127,7 @@ const BuildingTypePanel = (
           setSelectedCategory(targetCategory.id);
         } else {
           // Fallback: clear events if no items
-         // setEvents({});
+          // setEvents({});
         }
       }
     };
@@ -142,8 +139,8 @@ const BuildingTypePanel = (
         const safe = Array.isArray(data) ? data : [];
         // Cache in sessionStorage to avoid re-fetch within the session
         try {
-          sessionStorage.setItem('categories_items_v1', JSON.stringify(safe));
-        } catch (_) {}
+          // sessionStorage.setItem('categories_items_v1', JSON.stringify(safe));
+        } catch (_) { }
         // Persist to store and local
         setCategoriesInStore(safe);
         initFromData(safe);
@@ -154,22 +151,21 @@ const BuildingTypePanel = (
     };
 
     // Prefer session cache first, then store cache, else fetch
-    let sessionCached = null;
-    try {
-      const raw = sessionStorage.getItem('categories_items_v1');
-      if (raw) sessionCached = JSON.parse(raw);
-    } catch (_) {}
+    // let sessionCached = null;
+    // try {
+    //   const raw = sessionStorage.getItem('categories_items_v1');
+    //   if (raw) sessionCached = JSON.parse(raw);
+    // } catch (_) {}
 
-    if (Array.isArray(sessionCached) && sessionCached.length > 0) {
-      setCategoriesInStore(sessionCached);
-      initFromData(sessionCached);
-    } else if (Array.isArray(categoriesFromStore) && categoriesFromStore.length > 0) {
-      initFromData(categoriesFromStore);
-    } else {
-      load();
-    }
+    // if (Array.isArray(sessionCached) && sessionCached.length > 0) {
+    //   setCategoriesInStore(sessionCached);
+    //   initFromData(sessionCached);
+    // } else if (Array.isArray(categoriesFromStore) && categoriesFromStore.length > 0) {
+    //   initFromData(categoriesFromStore);
+    // } else {
+    load();
+    // }
   }, []);
-
 
   // const categories = [
   //   {
@@ -327,11 +323,11 @@ const BuildingTypePanel = (
       categoryName: category?.name,
     });
 
-     // On card selection, set events from the item (single object inside array)
-     const rawEvents = Array.isArray(item?.events) ? (item.events[0] || {}) : {};
+    // On card selection, set events from the item (single object inside array)
+    const rawEvents = Array.isArray(item?.events) ? (item.events[0] || {}) : {};
     //  setEvents(rawEvents);
-     // Apply these events immediately
-     applyEventsAndPost(rawEvents);
+    // Apply these events immediately
+    applyEventsAndPost(rawEvents);
 
   };
 
@@ -340,6 +336,7 @@ const BuildingTypePanel = (
     setActivePanelItem({ id: 'size' });
   };
 
+  
   return (
     <div className="h-full overflow-y-auto">
       {/* Header Section */}
